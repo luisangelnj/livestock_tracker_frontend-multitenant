@@ -44,7 +44,7 @@ const {
       </InputGroup>
       <p v-if="errors.email" class="text-pink-500 pb-5">{{ errors.email }}</p>
 
-      <InputGroup v-model="userModel.password" label="Password" type="password" placeholder="••••••••">
+      <InputGroup v-model="userModel.password" label="Contraseña" type="password" placeholder="••••••••">
         <svg
           class="fill-current"
           width="22"
@@ -76,7 +76,10 @@ const {
         />
       </div>
 
-      <p class="text-center font-medium">¿Aún no tienes cuenta? <span class="text-primary"><RouterLink :to="{name:'signup'}">Regístrate aquí</RouterLink></span></p>
+      <div class="space-y-3">
+        <p class="text-center font-medium"><RouterLink class="text-primary" :to="{name:'forgot-password'}">¿Olvidaste tu contraseña?</RouterLink></p>
+        <p class="text-center font-medium">¿Aún no tienes cuenta? <span class="text-primary"><RouterLink :to="{name:'signup'}">Regístrate aquí</RouterLink></span></p>
+      </div>
       
     </DefaultAuthCard>
 

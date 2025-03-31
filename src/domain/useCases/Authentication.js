@@ -24,4 +24,14 @@ export default {
         return response
     },
 
+    forgotPassword: async (email) => {
+        const response = await AuthenticationRepository.forgotPassword(email)
+        return response
+    },
+
+    resetPassword: async (token, email, password, password_confirmation) => {
+        const response = await AuthenticationRepository.resetPassword(token, email, password, password_confirmation)
+        return response
+    }
+
 }

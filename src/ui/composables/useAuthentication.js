@@ -29,6 +29,8 @@ const useAuthentication = () => {
 
     const isEmailVerified = ref(null);
 
+    const isForgotPasswordEmailSent = ref(false);
+
     const errors = ref({});
 
     // VALIDACIONES
@@ -66,7 +68,6 @@ const useAuthentication = () => {
         // Si no hay errores, retornar true para proceder con el registro
         return Object.keys(newErrors).length === 0;
     };
-
     const validateLoginForm = () => { 
         const newErrors = {};
         if (!userModel.value.email) {
@@ -84,6 +85,39 @@ const useAuthentication = () => {
                 newErrors.password = 'La contraseña debe tener al menos 8 caracteres.';
             }
         }
+        errors.value = newErrors; // Actualizar los errores
+
+        // Si no hay errores, retornar true para proceder con el registro
+        return Object.keys(newErrors).length === 0;
+    }
+    const validateForgotPasswordForm = () => {
+        const newErrors = {};
+        if (!userModel.value.email) {
+            newErrors.email = 'Ingresa tu correo electrónico.';
+        } else {
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(userModel.value.email)) {
+                newErrors.email = 'Ingrese un correo electrónico válido.';
+            }
+        }
+        errors.value = newErrors; // Actualizar los errores
+
+        // Si no hay errores, retornar true para proceder con el registro
+        return Object.keys(newErrors).length === 0;
+    }
+    const validateResetPasswordForm = () => {
+        const newErrors = {};
+        if (!userModel.value.password) {
+            newErrors.password = 'La contraseña es obligatoria.';
+        } else {
+            if (userModel.value.password.length < 8) {
+                newErrors.password = 'La contraseña debe tener al menos 8 caracteres.';
+            }
+        }
+        if (userModel.value.password !== userModel.value.password_confirmation) {
+            newErrors.password_confirmation = 'Las contraseñas no coinciden.';
+        }
+
         errors.value = newErrors; // Actualizar los errores
 
         // Si no hay errores, retornar true para proceder con el registro
@@ -259,16 +293,79 @@ const useAuthentication = () => {
         }
     }
 
+    const forgotPassword = async (email) => {
+        const loader = $loading.show();
+        try {
+            if (!validateForgotPasswordForm()) {
+                toast.warning('Revisa los campos para continuar')
+                return; // Si hay errores, no procedemos
+            }
+
+            const result = await Authentication.forgotPassword(email);
+            if (!result) {
+                throw Error("Error al solicitar recuperación de contraseña");
+            }
+            if (result && result.success === false) {
+                toast.error(result.error ? result.error : 'Ha ocurrido un error. Inténtalo de nuevo más tarde');
+                return;
+            }
+            if (result && result.success === true) {
+                toast.success('¡Se han enviado las instrucciones al correo solicitado!');
+                isForgotPasswordEmailSent.value = true
+                return;
+            }
+            throw Error("Error al enviar el correo de recuperación de contraseña");
+        } catch (error) {
+            toast.error('Ha ocurrido un error. Inténtalo de nuevo más tarde')
+            throw new Error('Error al enviar el correo de recuperación de contraseña');
+        } finally {
+            loader.hide()
+        }
+    }
+
+    const resetPassword = async (token, email, password, password_confirmation) => {
+        const loader = $loading.show();
+        try {
+            if (!validateResetPasswordForm()) {
+                toast.warning('Revisa los campos para continuar')
+                return; // Si hay errores, no procedemos
+            }
+
+            const result = await Authentication.resetPassword(token, email, password, password_confirmation);
+            if (!result) {
+                throw Error("Error al restablecer la nueva contraseña");
+            }
+            if (result && result.success === false) {
+                toast.error(result.error ? result.error : 'Ha ocurrido un error. Inténtalo de nuevo más tarde');
+                return;
+            }
+            if (result && result.success === true) {
+                toast.success('¡Se restableció tu contraseña! Inicia sesión');
+                router.push({ name: 'login' });
+                return;
+            }
+            throw Error("Error al restablecer la nueva contraseña");
+        } catch (error) {
+            toast.error('Ha ocurrido un error. Inténtalo de nuevo más tarde')
+            throw new Error('Error al restablecer la nueva contraseña');
+        } finally {
+            loader.hide()
+        }
+    }
+
     return {
         toast,
         userModel,
         errors,
         isEmailVerified,
+        isForgotPasswordEmailSent,
         registerUser,
         resendVerificationEmail,
         verifyUserEmail,
         loginUser,
-        logoutUser
+        logoutUser,
+        forgotPassword,
+        resetPassword
     }
 
 }

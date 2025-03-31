@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import LoginView from '@/ui/views/Authentication/LoginView.vue'
 import SignupView from '@/ui/views/Authentication/SignupView.vue'
+import ForgotPasswordView from '@/ui/views/Authentication/ForgotPasswordView.vue'
+import ResetPasswordView from '@/ui/views/Authentication/ResetPasswordView.vue'
 import VerifyEmailNoticeView from '@/ui/views/Authentication/VerifyEmailNoticeView.vue'
 import VerifyEmailView from '@/ui/views/Authentication/VerifyEmailView.vue'
 import DashboardView from '@/ui/views/Dashboard/DashboardView.vue'
@@ -26,18 +28,16 @@ const routes = [
   { path: '/auth/login', name: 'login', component: LoginView, meta: { title: 'Login', requiresGuest: true } },
   { path: '/auth/signup', name: 'signup', component: SignupView, meta: { title: 'Signup', requiresGuest: true } },
   {
-    path: '/auth/verification-notice', name: 'verify-notice', component: VerifyEmailNoticeView, meta: { requiresGuest: true },
+    path: '/auth/verification-notice', name: 'verify-notice', component: VerifyEmailNoticeView, meta: { title: 'Verifica tu correo', requiresGuest: true },
     beforeEnter: (to, from, next) => {
-      // Si viene de otra ruta del sistema, lo deja pasar
-      if (from.name) {
-        next();
-      } else {
-        // Si accede manualmente, lo redirige a inicio
-        next("/");
-      }
+      // Si viene de otra ruta del sistema, lo deja pasar. Si es accedido manualmente manda a home
+      from.name ? next() : next("/");
     },
   },
-  { path: '/auth/email/verify/:id/:token', name: 'verify-email', component: VerifyEmailView, meta: { requiresGuest: true } },
+  { path: '/auth/email/verify/:id/:token', name: 'verify-email', component: VerifyEmailView, meta: { title: 'Verifica tu correo', requiresGuest: true } },
+  { path: '/auth/forgot-password', name: 'forgot-password', component: ForgotPasswordView, meta: { title: 'Olvidé mi contraseña', requiresGuest: true } },
+  { path: '/auth/reset-password/:token/:email', name: 'reset-password', component: ResetPasswordView, meta: { title: 'Restablecer mi contraseña', requiresGuest: true } },
+
 
   { path: '/dashboard', name: 'dashboard', component: DashboardView, meta: { title: 'Dashboard', requiresAuth: true } },
   // { path: '/config/users', name: 'config-users', component: UsersView, meta: { title: 'Configuración de usuarios' } },

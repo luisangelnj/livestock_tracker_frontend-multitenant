@@ -78,6 +78,59 @@ export default {
                 error: 'Error al verificar el correo.'
             };
         }
+    },
+
+    async forgotPassword(email) {
+        try {
+            
+            const response = await axios.post('/auth/forgot-password', {
+                email: email
+            });
+            if (response.status === 200) {
+                return {
+                    success: true
+                };
+            } else {
+                throw new Error(`Unexpected response status: ${response.status}`); // Para otros códigos
+            }
+
+        } catch (error) {
+            // Manejo de otros tipos de errores
+            console.error('Error al enviar el correo:', error.response ? error.response.data : error.message);
+            // Estructura personalizada para devolver los errores
+            return {
+                success: false,
+                error: 'Error al enviar el correo.'
+            };
+        }
+    },
+
+    async resetPassword(token, email, password, password_confirmation) {
+        try {
+            
+            const response = await axios.post('/auth/reset-password', {
+                token,
+                email,
+                password,
+                password_confirmation
+            });
+            if (response.status === 200) {
+                return {
+                    success: true
+                };
+            } else {
+                throw new Error(`Unexpected response status: ${response.status}`); // Para otros códigos
+            }
+
+        } catch (error) {
+            // Manejo de otros tipos de errores
+            console.error('Error al enviar el correo:', error.response ? error.response.data : error.message);
+            // Estructura personalizada para devolver los errores
+            return {
+                success: false,
+                error: 'Este enlace de recuperación es inválido.'
+            };
+        }
     }
 
 }

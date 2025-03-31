@@ -146,7 +146,7 @@ const pageTitle = ref('Registro')
       <div class="mt-6 text-center">
         <p class="font-medium">
           ¿Ya tienes una cuenta?
-          <router-link to="/auth/signin" class="text-primary">Inicia sesión</router-link>
+          <router-link :to="{name:'login'}" class="text-primary">Inicia sesión</router-link>
         </p>
       </div>
 
