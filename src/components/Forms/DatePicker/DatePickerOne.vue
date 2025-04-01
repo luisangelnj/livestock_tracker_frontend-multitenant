@@ -1,14 +1,42 @@
-<script setup lang="ts">
+<script setup>
+import { defineEmits, ref, watch, defineComponent } from 'vue';
 import flatpickr from 'flatpickr'
+import { Spanish } from "flatpickr/dist/l10n/es"; // Locale en español
 import { onMounted } from 'vue'
+
+const props = defineProps({
+  label: String,
+  type: String,
+  placeholder: String,
+  modelValue: [String, Number],
+  customClasses: String,
+  customInputClasses: [String, Array, Object],
+  isRequired: Boolean, // Define isRequired como booleano
+  errorText: String,
+  isDisabled: Boolean
+});
+
+const localInputValue = ref(props.modelValue)
+
+// Watch for changes to modelValue prop
+watch(() => props.modelValue, (newValue) => {
+  localInputValue.value = newValue; // Update local value when prop changes
+});
+
+const emit = defineEmits(['update:modelValue']);
+
+const updateValue = (event) => {
+  emit('update:modelValue', event.target.value);
+};
 
 onMounted(() => {
   // Init flatpickr
   flatpickr('.datepicker', {
+    locale: Spanish, // Español
     mode: 'single',
     static: true,
     monthSelectorType: 'static',
-    dateFormat: 'M j, Y',
+    dateFormat: "d/m/Y", // Formato día/mes/año (ej. "05/01/2024")
     prevArrow:
       '<svg class="fill-current" width="7" height="11" viewBox="0 0 7 11"><path d="M5.4 10.8l1.4-1.4-4-4 4-4L5.4 0 0 5.4z" /></svg>',
     nextArrow:
@@ -19,12 +47,14 @@ onMounted(() => {
 
 <template>
   <div>
-    <label class="mb-3 block text-sm font-medium text-black dark:text-white"> Date picker </label>
+    <label v-if="label" class="mb-3 block text-sm font-medium text-black dark:text-white">       {{ label }} </label>
     <div class="relative">
       <input
         class="datepicker w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-normal outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-        placeholder="mm/dd/yyyy"
+        placeholder="dd/mm/yyyy"
         data-class="flatpickr-right"
+        v-model="localInputValue"
+        @input="updateValue"
       />
 
       <div class="pointer-events-none absolute inset-0 right-5 left-auto flex items-center">

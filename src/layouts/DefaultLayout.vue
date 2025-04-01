@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import HeaderArea from '@/components/Header/HeaderArea.vue'
 import SidebarArea from '@/components/Sidebar/SidebarArea.vue'
 </script>
