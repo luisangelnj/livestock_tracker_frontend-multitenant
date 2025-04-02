@@ -46,8 +46,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
-    <label v-if="label" class="mb-3 block text-sm font-medium text-black dark:text-white">       {{ label }} </label>
+  <div :class="customClasses">
+    <label v-if="label" class="mb-3 block text-sm font-medium text-black dark:text-white"> {{ label }} </label>
     <div class="relative">
       <input
         class="datepicker w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-normal outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -55,6 +55,7 @@ onMounted(() => {
         data-class="flatpickr-right"
         v-model="localInputValue"
         @input="updateValue"
+        :disabled="isDisabled"
       />
 
       <div class="pointer-events-none absolute inset-0 right-5 left-auto flex items-center">

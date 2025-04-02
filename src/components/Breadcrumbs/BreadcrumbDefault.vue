@@ -8,6 +8,8 @@ const props = defineProps(['pageTitle'])
       {{ props.pageTitle }}
     </h2>
 
+    
+
     <nav>
       <ol class="flex items-center gap-2">
         <li>

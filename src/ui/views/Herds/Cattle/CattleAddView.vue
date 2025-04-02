@@ -3,7 +3,6 @@ import BreadcrumbDefault from '@/components/Breadcrumbs/BreadcrumbDefault.vue'
 import DefaultCard from '@/components/Forms/DefaultCard.vue'
 import InputGroup from '@/components/Forms/InputGroup.vue'
 import SelectGroupTwo from '@/components/Forms/SelectGroup/SelectGroupTwo.vue'
-import SelectGroupOne from '@/components/Forms/SelectGroup/SelectGroupOne.vue'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import DatePickerOne from '@/components/Forms/DatePicker/DatePickerOne.vue'
 
@@ -12,6 +11,7 @@ import { useToast } from "vue-toastification";
 
 import useCattle from "@/ui/composables/Herds/Cattle/useCattle.js";
 import useBreed from "@/ui/composables/Catalogs/useBreed.js";
+import useSex from "@/ui/composables/Catalogs/useSex.js";
 
 const pageTitle = ref('Registrando nuevo ganado')
 
@@ -31,9 +31,16 @@ const {
   getAllBreedsNoPag
 } = useBreed();
 
+const {
+  sexList,
+  sexModel,
+  getAllSexesNoPag
+} = useSex();
+
 
 onMounted(async () => {
   await getAllBreedsNoPag();
+  await getAllSexesNoPag();
 })
 
 </script>
@@ -46,60 +53,55 @@ onMounted(async () => {
     <div class="grid grid-row-1 gap-1 sm:grid-cols-2">
       
       <div class="flex flex-col gap-9">
-
         <DefaultCard>
           
             <div class="p-6.5">
-              <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
-                <InputGroup
-                  v-model="cattleModel.tagNameNumber"
-                  label="Nombre / Etiqueta"
-                  type="text"
-                  placeholder="Ingresa el nombre o etiqueta"
+              <InputGroup
+                v-model="cattleModel.tagNameNumber"
+                label="Nombre / Etiqueta"
+                type="text"
+                placeholder="Ingresa el nombre o etiqueta"
+                customClasses="w-full mb-4.5"
+                :customInputClasses="[{
+                  'border focus:border-pink-500 enabled:border-pink-500 border-pink-500 ring-pink-500': errors.tagNameNumber
+                }]"
+                :errorText="errors.tagNameNumber"
+                isRequired
+              />
+
+              <div class="mb-7 flex flex-col gap-6 xl:flex-row">
+                <SelectGroupTwo
+                  v-model="cattleModel.sexId"
+                  label="Sexo"
+                  placeholder="Selecciona sexo"
+                  :options="sexList"
                   customClasses="w-full xl:w-1/2"
-                  :customInputClasses="[{
-                    'border focus:border-pink-500 enabled:border-pink-500 border-pink-500 ring-pink-500': errors.tagNameNumber
-                  }]"
-                  :errorText="errors.tagNameNumber"
-                  isRequired
                 />
                 <SelectGroupTwo
+                  v-model="cattleModel.breedId"
                   label="Raza"
                   placeholder="Selecciona raza"
                   :options="breedList"
-                  v-model="cattleModel.breedId"
-                  isRequired
+                  customClasses="w-full xl:w-1/2"
                 />
               </div>
 
-              <InputGroup
-                label="Costo de adquisición"
-                type="number"
-                placeholder="$"
-                customClasses="w-full xl:w-1/2"
-              />
+              <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                <DatePickerOne
+                  customClasses="w-full xl:w-1/2"
+                  label="Fecha de nacimiento"
+                  v-model="cattleModel.birthDate"
+                />
 
-              <InputGroup
-                label="Subject"
-                type="text"
-                placeholder="Enter your subject"
-                customClasses="mb-4.5"
-              />
-
-              <div class="mb-6">
-                <label class="mb-2.5 block text-black dark:text-white"> Message </label>
-                <textarea
-                  rows="6"
-                  placeholder="Type your message"
-                  class="w-full rounded border-[1.5px] text-black border-stroke bg-transparent py-3 px-5 font-normal outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:text-white dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                ></textarea>
+                <InputGroup
+                  v-model="cattleModel.initialWeight"
+                  label="Peso inicial (Kg)"
+                  type="number"
+                  placeholder="Kg"
+                  customClasses="w-full xl:w-1/2"
+                />
               </div>
 
-              <button
-                class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90"
-              >
-                Send Message
-              </button>
             </div>
 
         </DefaultCard>
@@ -112,66 +114,46 @@ onMounted(async () => {
           
             <div class="p-6.5">
               <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
-                <InputGroup
-                  v-model="cattleModel.tagNameNumber"
-                  label="Nombre / Etiqueta"
-                  type="text"
-                  placeholder="Ingresa el nombre o etiqueta"
-                  customClasses="w-full xl:w-1/2"
-                  :customInputClasses="[{
-                    'border focus:border-pink-500 enabled:border-pink-500 border-pink-500 ring-pink-500': errors.tagNameNumber
-                  }]"
-                  :errorText="errors.tagNameNumber"
-                  isRequired
+                <DatePickerOne
+                  customClasses="w-full xl:w-1/2 mb-4.5"
+                  label="Fecha de adquisición"
+                  v-model="cattleModel.acquisitionDate"
                 />
 
-                
-
                 <InputGroup
-                  label="Costo de adquisición"
+                  v-model="cattleModel.purchaseCost"
+                  label="Costo de adquisición ($)"
                   type="number"
                   placeholder="$"
                   customClasses="w-full xl:w-1/2"
                 />
               </div>
 
-              <InputGroup
-                label="Email"
-                type="email"
-                placeholder="Enter your email address"
-                customClasses="mb-4.5"
-                required
-              />
-
-              <InputGroup
-                label="Subject"
-                type="text"
-                placeholder="Enter your subject"
-                customClasses="mb-4.5"
-              />
-
-              <SelectGroupTwo />
-
               <div class="mb-6">
-                <label class="mb-2.5 block text-black dark:text-white"> Message </label>
+                <label class="mb-2.5 block text-black dark:text-white"> Notas iniciales </label>
                 <textarea
-                  rows="6"
-                  placeholder="Type your message"
+                  rows="4"
+                  v-model="cattleModel.initialNotes"
+                  placeholder="Escribe notas iniciales"
                   class="w-full rounded border-[1.5px] text-black border-stroke bg-transparent py-3 px-5 font-normal outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:text-white dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 ></textarea>
               </div>
 
-              <button
-                class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90"
-              >
-                Send Message
-              </button>
             </div>
 
         </DefaultCard>
 
       </div>
 
+    </div>
+
+    <div class="flex w-full justify-center mt-8">
+      <button
+        @click="addCattle"
+        class="flex w-full lg:w-1/3 justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90"
+      >
+        Registrar
+      </button>
     </div>
 
   </DefaultLayout>

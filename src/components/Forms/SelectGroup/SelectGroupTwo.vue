@@ -40,7 +40,7 @@ const handleChangeEvent = (e) => {
 </script>
 
 <template>
-  <div class="mb-4.5">
+  <div :class="customClasses">
     <label v-if="label" class="mb-2.5 block text-sm font-medium text-black dark:text-white">
       {{ label }}
       <span v-if="isRequired" class="text-meta-1">*</span>

@@ -6,6 +6,7 @@ import { useVueTable, createColumnHelper, getCoreRowModel } from '@tanstack/vue-
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import InputGroup from '@/components/Forms/InputGroup.vue'
 import ButtonDefault from '@/components/Buttons/ButtonDefault.vue';
+import { EyeIcon } from '@heroicons/vue/24/solid';
 
 import useCattle from "@/ui/composables/Herds/Cattle/useCattle.js";
 
@@ -97,7 +98,7 @@ const debounceSearchQuery = _.debounce(searchCattle, 450);
 
 <template>
   <DefaultLayout>
-    <div class="flex items-start justify-between">
+    <div class="flex items-start justify-between py-1">
       <h2 class="text-title-md2 font-semibold text-black dark:text-white">
         {{ pageTitle }}
       </h2>
@@ -110,7 +111,7 @@ const debounceSearchQuery = _.debounce(searchCattle, 450);
         @update:model-value="debounceSearchQuery"
       />
     </div>
-    <div class="flex justify-between items-center py-2">
+    <div class="flex justify-between items-center pb-2">
       <RouterLink class="flex justify-center items-center" :to="{name:'cattle-add'}">
         <ButtonDefault label="Añadir" customClasses="bg-primary/90 text-sm hover:opacity-95 text-white w-21 h-12 md:w-30 md:h-12 rounded-lg">
           <span>🐄</span>
@@ -191,7 +192,7 @@ const debounceSearchQuery = _.debounce(searchCattle, 450);
               {{ cell.getValue() }}
             </td>
             <td class="px-6 py-3 text-sm text-primary text-center">
-              <!-- <router-link :to="{ name: 'settings-users-detail', params: { id: row.original.id } }"><span class="cursor-pointer">Editar</span></router-link> -->
+              <router-link :to="{ name: 'cattle-detail', params: { id: row.original.id } }"><span class="cursor-pointer" title:="Ver detalle"><EyeIcon class="size-5"/></span></router-link>
             </td>
           </tr>
         </tbody>

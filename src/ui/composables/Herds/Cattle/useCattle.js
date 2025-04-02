@@ -23,15 +23,16 @@ const useCattle = () => {
     const cattleList = ref([]);
     const cattleModel = ref([{
         id: null,
-        tagNameNumber: '',
-        acquisitionDate: '',
-        purchaseCost: '',
-        initialWeight: '',
-        sex: '',
-        sexId: '',
-        breed: '',
-        breedId: '',
-        initialNotes: '',
+        tagNameNumber: '', //
+        acquisitionDate: '', //
+        purchaseCost: '', //
+        birthDate: '', //
+        initialWeight: '', //
+        sex: '', //
+        sexId: '', //
+        breed: '', //
+        breedId: '', //
+        initialNotes: '', //
         registerDate: '',
         status: ''
     }]);
@@ -44,24 +45,6 @@ const useCattle = () => {
         if (!cattleModel.value.tagNameNumber) {
             newErrors.tagNameNumber = 'El nombre o número de etiqueta es obligatorio.';
         }
-        if (!cattleModel.value.acquisitionDate) {
-            newErrors.acquisitionDate = 'La fecha de adquisición es obligatoria.';
-        }
-        if (!cattleModel.value.purchaseCost) {
-            newErrors.purchaseCost = 'El costo de compra es obligatorio.';
-        }
-        if (!cattleModel.value.initialWeight) {
-            newErrors.initialWeight = 'El peso inicial es obligatorio.';
-        }
-        if (!cattleModel.value.sex) {
-            newErrors.sex = 'El sexo es obligatorio.';
-        }
-        if (!cattleModel.value.breed) {
-            newErrors.breed = 'La raza es obligatoria.';
-        }
-        // if (!cattle.initialNotes) {
-        //   newErrors.initialNotes = 'Las notas iniciales son obligatorias.';
-        // }
         errors.value = newErrors; // Actualizar los errores
 
         // Si no hay errores, retornar true para proceder con el registro
@@ -104,10 +87,11 @@ const useCattle = () => {
             }
 
             const resp = await Cattle.addCattle(cattleModel.value);
+            cattleModel.value = resp
             if (resp.success == false) throw resp;
 
             toast.success('Se ha registrado exitosamente');
-            router.push({ name: 'cattle-add' });
+            router.push({ name: 'cattle-detail', params: {id: cattleModel.value.id} });
             return;
 
         } catch (error) {
@@ -121,7 +105,36 @@ const useCattle = () => {
                 return;
             }
             toast.error('Ha ocurrido un error al guardar el registro. Inténtalo de nuevo más tarde')
-            throw new Error('Error al registrar al el ganado: ' + error);
+            throw new Error('Error al registrar el ganado: ' + error);
+        } finally {
+            loader.hide()
+        }
+    }
+
+    const getCattleDetail = async (userId) => {
+        const loader = $loading.show()
+        try {
+            
+            const resp = await Cattle.getCattleDetail(userId);
+            if (resp.success == false) throw resp;
+
+            cattleModel.value = resp
+
+            return resp
+
+        } catch (error) {
+            if (error.code == 401) {
+                toast.warning('Tu sesión caducó por seguridad, ingresa nuevamente.')
+                window.location.reload();
+                return;
+            }
+            if (error.code == 404) {
+                toast.warning(error?.error ? error.error : 'No se encontró el ganado solicitado')
+                router.push({ name: 'cattle-list' });
+                return;
+            }
+            toast.error('Ha ocurrido un error al obtener el registro solicitado')
+            throw new Error('Error al obtener el registro: ' + error);
         } finally {
             loader.hide()
         }
@@ -139,7 +152,8 @@ const useCattle = () => {
         errors,
 
         getAllCattle,
-        addCattle
+        addCattle,
+        getCattleDetail
     }
 }
 

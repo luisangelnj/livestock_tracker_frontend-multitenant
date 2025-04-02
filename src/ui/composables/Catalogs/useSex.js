@@ -3,9 +3,9 @@ import { useLoading } from 'vue-loading-overlay'
 import { useToast } from "vue-toastification";
 import { useRouter } from 'vue-router';
 
-import Breed from "@/domain/useCases/Breed";
+import Sex from "@/domain/useCases/Sex";
 
-const useBreed = () => { 
+const useSex = () => { 
 
     const router = useRouter()
     const toast = useToast({
@@ -14,30 +14,28 @@ const useBreed = () => {
     const $loading = useLoading({
         color: '#007BFF'
     });
-
+    
     const page = ref(1);
     const totalPages = ref()
     const perPage = ref(15)
     const searchQuery = ref('');
 
-    const breedList = ref([]);
-    const breedModel = ref([{
+    const sexList = ref([]);
+    const sexModel = ref([{
         id: null,
-        userId: '',
         name: ''
     }]);
     const errors = ref({});
 
-
     // FUNCIONES
-    const getAllBreedsNoPag = async (loading = true) => {
+    const getAllSexesNoPag = async (loading = true) => {
         const loader = loading ? $loading.show() : null;
         try {
             
-            const resp = await Breed.getAllBreedsNoPag();
+            const resp = await Sex.getAllSexesNoPag();
             if (resp.success == false) throw resp;
 
-            breedList.value = resp
+            sexList.value = resp
 
             return resp
 
@@ -47,24 +45,27 @@ const useBreed = () => {
                 window.location.reload();
                 return;
             }
-            toast.error('Ha ocurrido un error al cargar el listado de razas. Inténtalo de nuevo más tarde')
-            throw new Error('Error al obtener listado de razas: ' + error);
+            toast.error('Ha ocurrido un error al cargar el listado de sexos. Inténtalo de nuevo más tarde')
+            throw new Error('Error al obtener listado de sexos: ' + error);
         } finally {
             loading ? loader.hide() : null
         }
     }
+
+
+
 
     return {
         page,
         totalPages,
         perPage,
         searchQuery,
-        breedList,
-        breedModel,
+        sexList,
+        sexModel,
         errors,
 
-        getAllBreedsNoPag,
+        getAllSexesNoPag,
     }
 }
 
-export default useBreed;
+export default useSex;

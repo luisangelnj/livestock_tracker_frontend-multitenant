@@ -9,6 +9,7 @@ import VerifyEmailView from '@/ui/views/Authentication/VerifyEmailView.vue'
 import DashboardView from '@/ui/views/Dashboard/DashboardView.vue'
 import CattleListView from '@/ui/views/Herds/Cattle/CattleListView.vue'
 import CattleAddView from '@/ui/views/Herds/Cattle/CattleAddView.vue'
+import CattleDetailView from '@/ui/views/Herds/Cattle/CattleDetailView.vue'
 
 import { useLoading } from 'vue-loading-overlay'
 import { useToast } from "vue-toastification";
@@ -42,11 +43,11 @@ const routes = [
 
 
   { path: '/dashboard', name: 'dashboard', component: DashboardView, meta: { title: 'Dashboard', requiresAuth: true } },
-  // { path: '/config/users', name: 'config-users', component: UsersView, meta: { title: 'Configuración de usuarios' } },
   
   // Rutas de gestión de ganado
   { path: '/herd/cattle', name: 'cattle-list', component: CattleListView, meta: { title: 'Listado de ganado', requiresAuth: true } },
   { path: '/herd/cattle/add', name: 'cattle-add', component: CattleAddView, meta: { title: 'Registro de nuevo ganado', requiresAuth: true } },
+  { path: '/herd/cattle/:id', name: 'cattle-detail', component: CattleDetailView, meta: { title: 'Detalle de ganado', requiresAuth: true } },
 
 
 
