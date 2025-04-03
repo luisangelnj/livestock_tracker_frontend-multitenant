@@ -7,10 +7,12 @@ import DatePickerOne from '@/components/Forms/DatePicker/DatePickerOne.vue'
 import ButtonDefault from '@/components/Buttons/ButtonDefault.vue';
 
 import { onMounted, ref } from 'vue'
-import { useToast } from "vue-toastification";
 import { useRoute } from 'vue-router';
+// import { useVueTable, createColumnHelper, getCoreRowModel } from '@tanstack/vue-table';
+import { useToast } from "vue-toastification";
 
 import useCattle from "@/ui/composables/Herds/Cattle/useCattle.js";
+import useCattleWeight from "@/ui/composables/History/useCattleWeight.js";
 
 const pageTitle = ref('Detalle de ganado')
 
@@ -27,18 +29,34 @@ const {
   getCattleDetail,
 } = useCattle();
 
+const {
+  weightList,
+  getAllWeightHistory,
+} = useCattleWeight();
+
 const handleAddWeight = () => {
   console.log('se intentó registrar un pesaje');
 }
 
-const handleAddMedicineShot = () => {
-  console.log('se intentó registrar un shot de medicina');
-  
-}
+// Helper para crear columnas
+// const columnHelper = createColumnHelper();
+
+// Definición de columnas
+// const weightColumns = [
+//   columnHelper.accessor('registerDate', {
+//     header: 'Fecha de registro',
+//     width: 45
+//   }),
+//   columnHelper.accessor('weigth', {
+//     header: 'Fecha adquisición',
+//     width: 45
+//   })
+// ];
 
 onMounted(async () => {
   const cattleId = route.params.id;
   await getCattleDetail(cattleId);
+  await getAllWeightHistory(true, cattleId);
 })
 
 </script>
@@ -165,13 +183,12 @@ onMounted(async () => {
       </div>
 
       <div class="flex flex-col gap-9">
-        <DefaultCard cardTitle="Historial médico" buttonTitle="Registrar" @button-clicked="handleAddMedicineShot">
+        <DefaultCard cardTitle="Historial médico">
           <div class="text-center min-h-30">
           </div>
         </DefaultCard>
       </div>
 
     </div>
-
   </DefaultLayout>
 </template>

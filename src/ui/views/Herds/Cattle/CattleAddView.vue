@@ -8,6 +8,8 @@ import DatePickerOne from '@/components/Forms/DatePicker/DatePickerOne.vue'
 
 import { onMounted, ref } from 'vue'
 import { useToast } from "vue-toastification";
+import { useRouter } from 'vue-router';
+import { useLoading } from 'vue-loading-overlay'
 
 import useCattle from "@/ui/composables/Herds/Cattle/useCattle.js";
 import useBreed from "@/ui/composables/Catalogs/useBreed.js";
@@ -15,8 +17,14 @@ import useSex from "@/ui/composables/Catalogs/useSex.js";
 
 const pageTitle = ref('Registrando nuevo ganado')
 
+const router = useRouter()
+
 const toast = useToast({
     timeout: 5000
+});
+
+const $loading = useLoading({
+    color: '#007BFF'
 });
 
 const {
@@ -39,8 +47,17 @@ const {
 
 
 onMounted(async () => {
-  await getAllBreedsNoPag();
-  await getAllSexesNoPag();
+  const loader = $loading.show()
+  try {
+    await getAllBreedsNoPag(false);
+    await getAllSexesNoPag(false);
+  } catch (error) {
+    toast.error('Ha ocurrido un error, intentalo en un momento')
+    router.push({ name: 'cattle-list' });
+  } finally {
+    loader.hide()
+  }
+
 })
 
 </script>

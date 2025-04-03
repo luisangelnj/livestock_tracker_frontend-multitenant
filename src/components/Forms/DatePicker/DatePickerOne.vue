@@ -47,10 +47,11 @@ onMounted(() => {
 
 <template>
   <div :class="customClasses">
-    <label v-if="label" class="mb-3 block text-sm font-medium text-black dark:text-white"> {{ label }} </label>
-    <div class="relative">
+    <label v-if="label" class="mb-3 block text-sm font-medium text-black"> {{ label }} </label>
+    <div class="relative" :class="{ 'bg-gray cursor-default' : isDisabled }">
       <input
-        class="datepicker w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-normal outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+        class="datepicker w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-normal outline-none transition focus:border-primary active:border-primary"
+        :class="{'active:border-stroke focus:border-stroke':isDisabled}"
         placeholder="dd/mm/yyyy"
         data-class="flatpickr-right"
         v-model="localInputValue"
