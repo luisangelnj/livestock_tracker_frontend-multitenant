@@ -17,7 +17,8 @@ const useCattleWeight = () => {
 
     const page = ref(1);
     const totalPages = ref()
-    const perPage = ref(15)
+    const perPage = ref(10)
+    const searching = ref(false)
 
     const weightList = ref([]);
     const weightModel = ref([{
@@ -55,9 +56,7 @@ const useCattleWeight = () => {
 
 
     return {
-        page,
-        totalPages,
-        perPage,
+        pagination: { page, totalPages, perPage, searching },
         weightList,
         weightModel,
         errors,

@@ -40,7 +40,6 @@ const columns = [
     <BaseTableTanStack
       :data="weightList"
       :columns="columns"
-      :isLoading="isLoading"
       :page="page"
       :totalPages="totalPages"
     />

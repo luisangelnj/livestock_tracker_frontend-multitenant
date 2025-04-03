@@ -5,10 +5,11 @@ import InputGroup from '@/components/Forms/InputGroup.vue'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import DatePickerOne from '@/components/Forms/DatePicker/DatePickerOne.vue'
 import ButtonDefault from '@/components/Buttons/ButtonDefault.vue';
+import BaseTableTanStack from '@/components/Tables/BaseTableTanStack.vue'
 
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router';
-// import { useVueTable, createColumnHelper, getCoreRowModel } from '@tanstack/vue-table';
+import { useVueTable, createColumnHelper, getCoreRowModel } from '@tanstack/vue-table';
 import { useToast } from "vue-toastification";
 
 import useCattle from "@/ui/composables/Herds/Cattle/useCattle.js";
@@ -25,13 +26,13 @@ const route = useRoute();
 const {
   cattleModel,
   errors,
-  addCattle,
   getCattleDetail,
 } = useCattle();
 
 const {
   weightList,
   getAllWeightHistory,
+  pagination: weightPagination
 } = useCattleWeight();
 
 const handleAddWeight = () => {
@@ -39,24 +40,40 @@ const handleAddWeight = () => {
 }
 
 // Helper para crear columnas
-// const columnHelper = createColumnHelper();
+const columnHelper = createColumnHelper();
 
 // Definición de columnas
-// const weightColumns = [
-//   columnHelper.accessor('registerDate', {
-//     header: 'Fecha de registro',
-//     width: 45
-//   }),
-//   columnHelper.accessor('weigth', {
-//     header: 'Fecha adquisición',
-//     width: 45
-//   })
-// ];
+const weightColumns = [
+  columnHelper.accessor('registerDate', {
+    header: 'Fecha de registro',
+    width: 45
+  }),
+  columnHelper.accessor('weight', {
+    header: 'Peso',
+    width: 45
+  })
+];
+
+// Navegación entre páginas
+const nextWeightHistoryPage = async () => {
+  weightPagination.searching.value = true
+  weightPagination.page.value++;
+  await getAllWeightHistory(false, cattleModel.value.id);
+  weightPagination.searching.value = false
+};
+
+// Navegación entre páginas
+const previousWeightHistoryPage = async () => {
+  weightPagination.searching.value = true
+  weightPagination.page.value--;
+  await getAllWeightHistory(false, cattleModel.value.id);
+  weightPagination.searching.value = false
+};
 
 onMounted(async () => {
-  const cattleId = route.params.id;
-  await getCattleDetail(cattleId);
-  await getAllWeightHistory(true, cattleId);
+  cattleModel.value.id = route.params.id;
+  await getCattleDetail(cattleModel.value.id);
+  await getAllWeightHistory(true, cattleModel.value.id);
 })
 
 </script>
@@ -178,6 +195,18 @@ onMounted(async () => {
       <div class="flex flex-col gap-9">
         <DefaultCard cardTitle="Historial de pesaje" buttonTitle="Registrar" @button-clicked="handleAddWeight">
           <div class="text-center min-h-30">
+            <BaseTableTanStack
+              v-if="weightList.length > 0"
+              :columns = "weightColumns"
+              :withHeader = false
+              :data = "weightList"
+              :page = "weightPagination.page.value"
+              :totalPages = "weightPagination.totalPages.value"
+              :searching = "weightPagination.searching.value"
+              :nextPage = "nextWeightHistoryPage"
+              :previousPage = "previousWeightHistoryPage"
+            />
+            <p class="py-5 font-medium" v-else>No hay registros</p>
           </div>
         </DefaultCard>
       </div>

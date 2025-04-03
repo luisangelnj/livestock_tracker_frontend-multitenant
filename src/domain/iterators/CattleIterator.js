@@ -5,7 +5,7 @@ export default {
                 return {
                     id: item.id,
                     tagNameNumber: item.tag_name_number,
-                    acquisitionDate: item.acquisition_date ? new Date( item.acquisition_date ).toLocaleDateString("es-MX") : '-',
+                    acquisitionDate: item.acquisition_date ? item.acquisition_date.split('-').reverse().join('/') : '-',
                     sex: item?.sex?.name ?? '-',
                     breed: item?.breed?.name ?? '-',
                     registerDate: new Date( item.created_at ).toLocaleDateString("es-MX"),
@@ -36,8 +36,8 @@ export default {
         return {
             id: data.id,
             tagNameNumber: data.tag_name_number,
-            acquisitionDate: data.acquisition_date ? new Date(data.acquisition_date).toLocaleDateString("es-MX") : '-',
-            birthDate: data.birth_date ? new Date(data.birth_date).toLocaleDateString("es-MX") : '-',
+            acquisitionDate: data.acquisition_date ? data.acquisition_date.split('-').reverse().join('/') : '-',
+            birthDate: data.birth_date ? data.birth_date.split('-').reverse().join('/') : '-',
             purchaseCost: data.purchase_cost ?? '-',
             initialWeight: data.initial_weight ?? '-',
             initialNotes: data.initial_notes ?? '-',

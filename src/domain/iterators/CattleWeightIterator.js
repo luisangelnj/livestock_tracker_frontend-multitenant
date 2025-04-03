@@ -4,7 +4,7 @@ export default {
             values: data.data.map(item => {
                 return {
                     id: item.id,
-                    registerDate: new Date(item.register_date).toLocaleDateString("es-MX"),
+                    registerDate: item.register_date ? item.register_date.split('-').reverse().join('/') : '-',
                     weight: item.weight,
                     createdAt: new Date(item.created_at).toLocaleDateString("es-MX"),
                 }

@@ -50,7 +50,7 @@ const columns = [
     width: 15
   }),
   columnHelper.accessor('registerDate', {
-    header: 'Fecha de registro',
+    header: 'Fecha del registro',
     width: 15
   }),
   columnHelper.accessor('status', {
