@@ -50,7 +50,7 @@ const routes = [
   { path: '/herd/cattle/add', name: 'cattle-add', component: CattleAddView, meta: { title: 'Registro de nuevo ganado', requiresAuth: true } },
   { path: '/herd/cattle/:id', name: 'cattle-detail', component: CattleDetailView, meta: { title: 'Detalle de ganado', requiresAuth: true } },
 
-  {path: '/example', name: 'example-view', component: ExampleView, meta: { title: 'Example view', requiresAuth: true } },
+  // {path: '/example', name: 'example-view', component: ExampleView, meta: { title: 'Example view', requiresAuth: true } },
 
 
 
