@@ -111,8 +111,8 @@ const useCattle = () => {
         }
     }
 
-    const getCattleDetail = async (userId) => {
-        const loader = $loading.show()
+    const getCattleDetail = async (loading = true, userId) => {
+        const loader = loading ? $loading.show() : null;
         try {
             
             const resp = await Cattle.getCattleDetail(userId);
@@ -136,7 +136,7 @@ const useCattle = () => {
             toast.error('Ha ocurrido un error al obtener el registro solicitado')
             throw new Error('Error al obtener el registro: ' + error);
         } finally {
-            loader.hide()
+            loading ? loader.hide() : null
         }
     }
 

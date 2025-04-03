@@ -11,6 +11,7 @@ import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router';
 import { useVueTable, createColumnHelper, getCoreRowModel } from '@tanstack/vue-table';
 import { useToast } from "vue-toastification";
+import { useLoading } from 'vue-loading-overlay'
 
 import useCattle from "@/ui/composables/Herds/Cattle/useCattle.js";
 import useCattleWeight from "@/ui/composables/History/useCattleWeight.js";
@@ -19,6 +20,9 @@ const pageTitle = ref('Detalle de ganado')
 
 const toast = useToast({
     timeout: 5000
+});
+const $loading = useLoading({
+    color: '#007BFF'
 });
 
 const route = useRoute();
@@ -71,9 +75,17 @@ const previousWeightHistoryPage = async () => {
 };
 
 onMounted(async () => {
-  cattleModel.value.id = route.params.id;
-  await getCattleDetail(cattleModel.value.id);
-  await getAllWeightHistory(true, cattleModel.value.id);
+  const loader = $loading.show()
+  try {
+    cattleModel.value.id = route.params.id;
+    await getCattleDetail(false, cattleModel.value.id);
+    await getAllWeightHistory(false, cattleModel.value.id);
+  } catch (error) {
+    toast.error('Ha ocurrido un error, intentalo en un momento')
+    route.push({ name: 'cattle-list' });
+  } finally {
+    loader.hide()
+  }
 })
 
 </script>
