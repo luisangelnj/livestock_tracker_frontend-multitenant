@@ -23,4 +23,12 @@ export default {
         return (response.success && response.data) ? CattleIterator.ResponseToCattleModel(response.data) : response
     },
 
+    updateCattle: async (cattleModel) => {
+        const request = await CattleIterator.RequestToUpdateCattle(cattleModel);
+
+        const response = await CattleRepository.updateCattle(request)
+
+        return (response.success && response.data) ? response.data : response
+    }
+
 }

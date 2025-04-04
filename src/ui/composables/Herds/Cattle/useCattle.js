@@ -51,6 +51,19 @@ const useCattle = () => {
         return Object.keys(newErrors).length === 0;
     }
 
+    // VALIDACIONES
+    const validateUpdateForm = () => {
+        const newErrors = {};
+        // Validar que todos los campos estén llenos
+        if (!cattleModel.value.tagNameNumber) {
+            newErrors.tagNameNumber = 'El nombre o número de etiqueta es obligatorio.';
+        }
+        errors.value = newErrors; // Actualizar los errores
+
+        // Si no hay errores, retornar true para proceder con el registro
+        return Object.keys(newErrors).length === 0;
+    }
+
 
     // FUNCIONES
     const getAllCattle = async (loading = true) => {
@@ -87,8 +100,8 @@ const useCattle = () => {
             }
 
             const resp = await Cattle.addCattle(cattleModel.value);
-            cattleModel.value = resp
             if (resp.success == false) throw resp;
+            cattleModel.value = resp
 
             toast.success('Se ha registrado exitosamente');
             router.push({ name: 'cattle-detail', params: {id: cattleModel.value.id} });
@@ -140,6 +153,40 @@ const useCattle = () => {
         }
     }
 
+    const updateCattle = async () => {
+        const loader = $loading.show();
+        try {
+            if (!validateUpdateForm()) {
+                toast.warning('Revisa los campos para continuar')
+                return; // Si hay errores, no procedemos
+            }
+
+            const resp = await Cattle.updateCattle(cattleModel.value);
+            if (resp.success == false) throw resp;
+            cattleModel.value = resp
+
+            toast.success('Se ha actualizado el registro');
+            router.push({ name: 'cattle-detail', params: {id: cattleModel.value.id} });
+            return;
+
+
+        } catch (error) {
+            if (error.code == 401) {
+                toast.warning('Tu sesión caducó por seguridad, ingresa nuevamente.')
+                window.location.reload();
+                return;
+            }
+            if (error.code == 422) {
+                toast.warning(error?.error ? error.error : 'Verifica la información ingresada')
+                return;
+            }
+            toast.error('Ha ocurrido un error al actualizar el registro. Inténtalo de nuevo más tarde')
+            throw new Error('Error al actualizar el ganado: ' + error);
+        } finally {
+            loader.hide()
+        }
+    }
+
 
 
     return {
@@ -153,7 +200,8 @@ const useCattle = () => {
 
         getAllCattle,
         addCattle,
-        getCattleDetail
+        getCattleDetail,
+        updateCattle
     }
 }
 

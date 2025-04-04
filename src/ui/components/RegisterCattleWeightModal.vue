@@ -67,6 +67,7 @@ const handleCloseModal = () => {
             <DatePickerOne
                 v-model="weightModel.registerDate"
                 label="Fecha de pesaje"
+                placeholder="dd/mm/yyyy"
                 isRequired
                 :errorText="errors.registerDate"
             />

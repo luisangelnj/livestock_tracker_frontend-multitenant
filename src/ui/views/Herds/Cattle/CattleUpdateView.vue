@@ -8,16 +8,17 @@ import DatePickerOne from '@/components/Forms/DatePicker/DatePickerOne.vue'
 
 import { onMounted, ref } from 'vue'
 import { useToast } from "vue-toastification";
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { useLoading } from 'vue-loading-overlay'
 
 import useCattle from "@/ui/composables/Herds/Cattle/useCattle.js";
 import useBreed from "@/ui/composables/Catalogs/useBreed.js";
 import useSex from "@/ui/composables/Catalogs/useSex.js";
 
-const pageTitle = ref('Registrando nuevo ganado')
+const pageTitle = ref('Editando ganado')
 
 const router = useRouter()
+const route = useRoute()
 
 const toast = useToast({
     timeout: 5000
@@ -30,18 +31,17 @@ const $loading = useLoading({
 const {
   cattleModel,
   errors,
-  addCattle
+  getCattleDetail,
+  updateCattle
 } = useCattle();
 
 const {
   breedList,
-  breedModel,
   getAllBreedsNoPag
 } = useBreed();
 
 const {
   sexList,
-  sexModel,
   getAllSexesNoPag
 } = useSex();
 
@@ -49,15 +49,16 @@ const {
 onMounted(async () => {
   const loader = $loading.show()
   try {
+    cattleModel.value.id = route.params.id;
     await getAllBreedsNoPag(false);
     await getAllSexesNoPag(false);
+    await getCattleDetail(false, cattleModel.value.id)
   } catch (error) {
     toast.error('Ha ocurrido un error, intentalo en un momento')
-    router.push({ name: 'cattle-list' });
+    
   } finally {
     loader.hide()
   }
-
 })
 
 </script>
@@ -85,7 +86,7 @@ onMounted(async () => {
                 :errorText="errors.tagNameNumber"
                 isRequired
               />
-              
+
               <div class="mb-7 flex flex-col gap-6 xl:flex-row">
                 <SelectGroupTwo
                   v-model="cattleModel.sexId"
@@ -168,10 +169,10 @@ onMounted(async () => {
 
     <div class="flex w-full justify-center mt-8">
       <button
-        @click="addCattle"
+        @click="updateCattle"
         class="flex w-full lg:w-1/3 justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90"
       >
-        Registrar
+        Actualizar
       </button>
     </div>
 

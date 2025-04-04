@@ -55,7 +55,7 @@ onMounted(() => {
       <input
         class="datepicker w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-normal outline-none transition focus:border-primary active:border-primary"
         :class="{'active:border-stroke focus:border-stroke':isDisabled}"
-        placeholder="dd/mm/yyyy"
+        :placeholder="props.placeholder"
         data-class="flatpickr-right"
         v-model="localInputValue"
         @input="updateValue"

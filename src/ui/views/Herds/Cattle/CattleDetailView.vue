@@ -113,7 +113,7 @@ onMounted(async () => {
     <BreadcrumbDefault :pageTitle="pageTitle" />
     <!-- Breadcrumb End -->
     <div class="flex justify-between items-center pb-2.5">
-      <RouterLink class="flex justify-center items-center" to="#">
+      <RouterLink class="flex justify-center items-center" :to="{name:'cattle-update', params: {id: cattleModel.id}}">
         <ButtonDefault label="Editar" customClasses="bg-primary/90 text-sm hover:opacity-95 text-white w-21 h-12 md:w-30 md:h-12 rounded-lg">
           <span>✍️</span>
         </ButtonDefault>
@@ -129,7 +129,6 @@ onMounted(async () => {
               v-model="cattleModel.tagNameNumber"
               label="Nombre / Etiqueta"
               type="text"
-              placeholder="Ingresa el nombre o etiqueta"
               customClasses="w-full mb-4.5"
               :customInputClasses="[{
                 'border focus:border-pink-500 enabled:border-pink-500 border-pink-500 ring-pink-500': errors.tagNameNumber
@@ -160,6 +159,7 @@ onMounted(async () => {
               <DatePickerOne
                 customClasses="w-full xl:w-1/2"
                 label="Fecha de nacimiento"
+                placeholder=""
                 v-model="cattleModel.birthDate"
                 isDisabled
               />
