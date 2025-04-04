@@ -4,6 +4,7 @@ import './assets/css/satoshi.css'
 import './assets/css/style.css'
 import 'jsvectormap/dist/css/jsvectormap.min.css'
 import 'flatpickr/dist/flatpickr.min.css'
+import 'vue-final-modal/style.css'
 
 import { LoadingPlugin } from 'vue-loading-overlay';
 import Toast from "vue-toastification";
@@ -11,6 +12,8 @@ import Toast from "vue-toastification";
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import VueApexCharts from 'vue3-apexcharts'
+import { createVfm } from 'vue-final-modal'
+
 
 import App from './App.vue'
 import router from './router'
@@ -24,5 +27,6 @@ app.use(createPinia())
 app.use(router)
 app.use(LoadingPlugin);
 app.use(VueApexCharts)
+app.use(createVfm())
 
 app.mount('#app')

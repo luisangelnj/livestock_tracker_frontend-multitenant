@@ -1,6 +1,6 @@
 <script setup>
 import { useVueTable, getCoreRowModel } from '@tanstack/vue-table'
-import { EyeIcon } from '@heroicons/vue/24/solid';
+import { EyeIcon, TrashIcon } from '@heroicons/vue/24/solid';
 import { watch, computed, ref } from "vue";
 
 // Props que recibe el componente
@@ -93,7 +93,11 @@ const handlePreviousPage = () => {
 						{{ cell.getValue() }}
 					</td>
 					<td class="px-6 py-3 text-sm text-primary text-center">
-						<router-link to="#"><span class="cursor-pointer" title="Ver detalle"><EyeIcon class="size-5"/></span></router-link>
+                        <slot name="actions" :row="row">
+                            <router-link to="#">
+                                <span class="cursor-pointer" title="Ver detalle"><EyeIcon class="size-5"/></span>
+                            </router-link>
+                        </slot>
 					</td>
                 </tr>
             </tbody>

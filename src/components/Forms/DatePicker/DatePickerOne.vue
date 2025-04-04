@@ -47,7 +47,10 @@ onMounted(() => {
 
 <template>
   <div :class="customClasses">
-    <label v-if="label" class="mb-3 block text-sm font-medium text-black"> {{ label }} </label>
+    <label v-if="label" class="mb-3 block text-sm font-medium text-black"> 
+      {{ label }} 
+      <span v-if="isRequired" class="text-meta-1">*</span>
+    </label>
     <div class="relative" :class="{ 'bg-gray cursor-default' : isDisabled }">
       <input
         class="datepicker w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-normal outline-none transition focus:border-primary active:border-primary"
@@ -58,6 +61,7 @@ onMounted(() => {
         @input="updateValue"
         :disabled="isDisabled"
       />
+      <small v-if="errorText" class="text-pink-500">{{ errorText }}</small>
 
       <div class="pointer-events-none absolute inset-0 right-5 left-auto flex items-center">
         <svg

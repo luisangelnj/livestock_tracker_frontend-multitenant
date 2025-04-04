@@ -11,5 +11,12 @@ export default {
             }),
             totalPages: data.last_page
         }
+    },
+    RequestToRegisterWeight: (data) => {
+        return {
+            cattle_id: data.cattleId,
+            weight: data.weight,
+            register_date: data.registerDate
+        }
     }
 }

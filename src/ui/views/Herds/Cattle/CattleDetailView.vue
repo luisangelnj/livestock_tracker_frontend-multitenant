@@ -6,6 +6,8 @@ import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import DatePickerOne from '@/components/Forms/DatePicker/DatePickerOne.vue'
 import ButtonDefault from '@/components/Buttons/ButtonDefault.vue';
 import BaseTableTanStack from '@/components/Tables/BaseTableTanStack.vue'
+import RegisterCattleWeightModal from '@/ui/components/RegisterCattleWeightModal.vue'
+import { EyeIcon, TrashIcon } from '@heroicons/vue/24/solid';
 
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router';
@@ -36,11 +38,26 @@ const {
 const {
   weightList,
   getAllWeightHistory,
-  pagination: weightPagination
+  pagination: weightPagination,
+  isRegisterWeightModalOpen,
+  deleteWeight
 } = useCattleWeight();
 
-const handleAddWeight = () => {
-  console.log('se intentó registrar un pesaje');
+const handleRegisteredWeight = async () => {
+  isRegisterWeightModalOpen.value = false;
+  weightPagination.searching.value = true
+  await getAllWeightHistory(false, cattleModel.value.id);
+  weightPagination.searching.value = false
+}
+
+const handleDeleteWeight = async (weightId) => {
+  if (!confirm('¿Estás seguro de que quieres borrar este registro de pesaje?')) return
+  weightPagination.searching.value = true
+  const success = await deleteWeight(false, weightId)
+  if (success) {
+    await getAllWeightHistory(false, cattleModel.value.id);
+  }
+  weightPagination.searching.value = false
 }
 
 // Helper para crear columnas
@@ -205,8 +222,8 @@ onMounted(async () => {
       </div>
 
       <div class="flex flex-col gap-9">
-        <DefaultCard cardTitle="Historial de pesaje" buttonTitle="Registrar" @button-clicked="handleAddWeight">
-          <div class="text-center min-h-30">
+        <DefaultCard cardTitle="Historial de pesaje" buttonTitle="Registrar" @button-clicked="isRegisterWeightModalOpen=true">
+          <div class="text-center min-h-30 pb-1 pe-1">
             <BaseTableTanStack
               v-if="weightList.length > 0"
               :columns = "weightColumns"
@@ -217,9 +234,23 @@ onMounted(async () => {
               :searching = "weightPagination.searching.value"
               :nextPage = "nextWeightHistoryPage"
               :previousPage = "previousWeightHistoryPage"
-            />
+            >
+              <template #actions="{ row }">
+                  <div class="flex justify-center space-x-2">
+                      <button @click="handleDeleteWeight(row.original.id)" class="text-red-500 hover:underline">
+                          <TrashIcon title="Eliminar" class="size-5" />
+                      </button>
+                  </div>
+              </template>
+            </BaseTableTanStack>
             <p class="py-5 font-medium" v-else>No hay registros</p>
           </div>
+          <RegisterCattleWeightModal
+            v-model="isRegisterWeightModalOpen"
+            @weight-registered="handleRegisteredWeight"
+            @closed="isRegisterWeightModalOpen=false"
+            :cattleId="Number(cattleModel.id)"
+          />
         </DefaultCard>
       </div>
 

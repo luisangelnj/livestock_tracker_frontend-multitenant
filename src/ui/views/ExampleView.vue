@@ -1,31 +1,18 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 
+import RegisterCattleWeightModal from '@/ui/components/RegisterCattleWeightModal.vue'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
-import BaseTableTanStack from '@/components/Tables/BaseTableTanStack.vue'
-
-import { createColumnHelper } from '@tanstack/vue-table';
 
 const pageTitle = ref('Vista example')
 
-// Datos y paginación
-const weightList = ref([
-  { registerDate: '2024-01-15', weight: 450 },
-  { registerDate: '2024-02-10', weight: 460 },
-  { registerDate: '2024-03-05', weight: 470 },
-  { registerDate: '2024-04-20', weight: 480 },
-  { registerDate: '2024-05-18', weight: 490 },
-]);
-const isLoading = ref(false);
-const page = ref(1);
-const totalPages = ref(1);
+const show = ref(false)
 
-// Columnas de la tabla
-const columnHelper = createColumnHelper();
-const columns = [
-  columnHelper.accessor('registerDate', { header: 'Fecha registro', width: 45 }),
-  columnHelper.accessor('weight', { header: 'Peso', width: 45 }),
-];
+function handleRegisteredWeight() {
+  show.value=false
+  console.log('se registró peso');
+  
+}
 
 </script>
 
@@ -37,12 +24,16 @@ const columns = [
       </h2>
     </div>
 
-    <BaseTableTanStack
-      :data="weightList"
-      :columns="columns"
-      :page="page"
-      :totalPages="totalPages"
+    <button @click="show = true">
+      Open Modal
+    </button>
+
+    <RegisterCattleWeightModal
+      v-model="show"
+      @weight-registered="() => handleRegisteredWeight()"
+      @closed="show=false"
     />
+
 
   </DefaultLayout>
 </template>
