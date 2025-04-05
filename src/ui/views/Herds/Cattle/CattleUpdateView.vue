@@ -14,6 +14,7 @@ import { useLoading } from 'vue-loading-overlay'
 import useCattle from "@/ui/composables/Herds/Cattle/useCattle.js";
 import useBreed from "@/ui/composables/Catalogs/useBreed.js";
 import useSex from "@/ui/composables/Catalogs/useSex.js";
+import useCattleStatus from "@/ui/composables/Catalogs/useCattleStatus.js";
 
 const pageTitle = ref('Editando ganado')
 
@@ -45,13 +46,19 @@ const {
   getAllSexesNoPag
 } = useSex();
 
+const {
+  statusList,
+  getAllStatusNoPag
+} = useCattleStatus();
+
 
 onMounted(async () => {
   const loader = $loading.show()
   try {
     cattleModel.value.id = route.params.id;
-    await getAllBreedsNoPag(false);
     await getAllSexesNoPag(false);
+    await getAllBreedsNoPag(false);
+    await getAllStatusNoPag(false);
     await getCattleDetail(false, cattleModel.value.id)
   } catch (error) {
     toast.error('Ha ocurrido un error, intentalo en un momento')
@@ -72,7 +79,7 @@ onMounted(async () => {
       
       <div class="flex flex-col gap-9">
         <DefaultCard>
-          
+
             <div class="p-6.5">
               <InputGroup
                 v-model="cattleModel.tagNameNumber"
@@ -111,12 +118,21 @@ onMounted(async () => {
                   placeholder="dd/mm/yyyy"
                   v-model="cattleModel.birthDate"
                 />
-
                 <InputGroup
                   v-model="cattleModel.initialWeight"
                   label="Peso inicial (Kg)"
                   type="number"
                   placeholder="Kg"
+                  customClasses="w-full xl:w-1/2"
+                />
+              </div>
+
+              <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                <SelectGroupTwo
+                  v-model="cattleModel.statusId"
+                  label="Estatus"
+                  placeholder="Selecciona el estatus del animal"
+                  :options="statusList"
                   customClasses="w-full xl:w-1/2"
                 />
               </div>
@@ -132,7 +148,7 @@ onMounted(async () => {
         <DefaultCard>
           
             <div class="p-6.5">
-              <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
+              <div class="flex flex-col gap-6 xl:flex-row">
                 <DatePickerOne
                   customClasses="w-full xl:w-1/2 mb-4.5"
                   label="Fecha de adquisición"
@@ -150,9 +166,9 @@ onMounted(async () => {
               </div>
 
               <div class="mb-6">
-                <label class="mb-2.5 block text-black dark:text-white"> Notas iniciales </label>
+                <label class="mb-2.5 block font-medium text-sm text-black dark:text-white"> Notas iniciales </label>
                 <textarea
-                  rows="4"
+                  rows="5"
                   v-model="cattleModel.initialNotes"
                   placeholder="Escribe notas iniciales"
                   class="w-full rounded border-[1.5px] text-black border-stroke bg-transparent py-3 px-5 font-normal outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:text-white dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"

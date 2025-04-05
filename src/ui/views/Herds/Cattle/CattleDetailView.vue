@@ -123,7 +123,6 @@ onMounted(async () => {
 
       <div class="flex flex-col gap-9">
         <DefaultCard>
-          
           <div class="p-6.5">
             <InputGroup
               v-model="cattleModel.tagNameNumber"
@@ -154,7 +153,6 @@ onMounted(async () => {
               />
             </div>
 
-
             <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
               <DatePickerOne
                 customClasses="w-full xl:w-1/2"
@@ -163,10 +161,19 @@ onMounted(async () => {
                 v-model="cattleModel.birthDate"
                 isDisabled
               />
-
               <InputGroup
                 v-model="cattleModel.initialWeight"
                 label="Peso inicial (Kg)"
+                type="text"
+                customClasses="w-full xl:w-1/2"
+                isDisabled
+              />
+            </div>
+
+            <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
+              <InputGroup
+                v-model="cattleModel.status"
+                label="Estatus"
                 type="text"
                 customClasses="w-full xl:w-1/2"
                 isDisabled
@@ -182,14 +189,13 @@ onMounted(async () => {
         <DefaultCard>
           
             <div class="p-6.5">
-              <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
+              <div class="flex flex-col gap-6 xl:flex-row">
                 <DatePickerOne
                   customClasses="w-full xl:w-1/2 mb-4.5"
                   label="Fecha de adquisición"
                   v-model="cattleModel.acquisitionDate"
                   isDisabled
                 />
-
                 <InputGroup
                   v-model="cattleModel.purchaseCost"
                   label="Costo de adquisición ($)"
@@ -200,9 +206,9 @@ onMounted(async () => {
               </div>
 
               <div class="mb-6">
-                <label class="mb-2.5 block text-black dark:text-white"> Notas iniciales </label>
+                <label class="mb-2.5 block text-sm font-medium text-black dark:text-white"> Notas iniciales </label>
                 <textarea
-                  rows="4"
+                  rows="5"
                   v-model="cattleModel.initialNotes"
                   class="w-full rounded border-[1.5px] text-black border-stroke bg-transparent py-3 px-5 font-normal outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:text-white dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                   disabled

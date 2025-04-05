@@ -9,7 +9,7 @@ export default {
                     sex: item?.sex?.name ?? '-',
                     breed: item?.breed?.name ?? '-',
                     registerDate: new Date( item.created_at ).toLocaleDateString("es-MX"),
-                    status: item.status
+                    status: item.status.name
                 }
             }),
             totalPages: data.last_page
@@ -37,6 +37,7 @@ export default {
             initial_weight: cattleModel.initialWeight,
             sex_id: cattleModel.sexId, 
             breed_id: cattleModel.breedId,
+            status_id: cattleModel.statusId,
             initial_notes : cattleModel.initialNotes
         }
     },
@@ -58,7 +59,8 @@ export default {
             sex: data?.sex?.name ?? '',
             breedId: data?.breed?.id ?? '',
             breed: data?.breed?.name ?? '',
-            status: data.status,
+            statusId: data?.status?.id ?? '',
+            status: data.status?.name ?? '',
             registerDate: new Date( data.created_at ).toLocaleDateString("es-MX"),
             updatedDate: new Date( data.updated_at ).toLocaleDateString("es-MX")
         }
