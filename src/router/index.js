@@ -12,6 +12,7 @@ import CattleAddView from '@/ui/views/Herds/Cattle/CattleAddView.vue'
 import CattleUpdateView from '@/ui/views/Herds/Cattle/CattleUpdateView.vue'
 import CattleDetailView from '@/ui/views/Herds/Cattle/CattleDetailView.vue'
 import ExampleView from '@/ui/views/ExampleView.vue'
+import DefaultLayoutRouterView from '@/layouts/DefaultLayoutRouterView.vue'
 
 import { useLoading } from 'vue-loading-overlay'
 import { useToast } from "vue-toastification";
@@ -54,7 +55,19 @@ const routes = [
 
 
 
-  {path: '/example', name: 'example-view', component: ExampleView, meta: { title: 'Example view', requiresAuth: true } },
+  {
+    path: '/example',
+    component: DefaultLayoutRouterView, // Aquí puedes poner un layout con un sidebar específico si lo deseas
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: 'first',
+        name: 'first-example',
+        component: ExampleView,
+        meta: { title: 'Página ejemplo' }
+      }
+    ]
+  },
 
   // Ruta comodín para redirigir a la página de inicio
   {

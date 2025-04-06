@@ -17,7 +17,6 @@ function handleRegisteredWeight() {
 </script>
 
 <template>
-  <DefaultLayout>
     <div class="flex items-start justify-between py-1">
       <h2 class="text-title-md2 font-semibold text-black dark:text-white">
         {{ pageTitle }}
@@ -35,5 +34,4 @@ function handleRegisteredWeight() {
     />
 
 
-  </DefaultLayout>
 </template>
