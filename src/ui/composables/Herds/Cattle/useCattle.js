@@ -126,11 +126,11 @@ const useCattle = () => {
         }
     }
 
-    const getCattleDetail = async (loading = true, userId) => {
+    const getCattleDetail = async (loading = true, cattleId) => {
         const loader = loading ? $loading.show() : null;
         try {
             
-            const resp = await Cattle.getCattleDetail(userId);
+            const resp = await Cattle.getCattleDetail(cattleId);
             if (resp.success == false) throw resp;
 
             cattleModel.value = resp

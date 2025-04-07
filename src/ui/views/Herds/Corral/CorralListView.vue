@@ -5,6 +5,7 @@ import { onMounted, ref } from 'vue'
 import InputGroup from '@/components/Forms/InputGroup.vue'
 import ButtonDefault from '@/components/Buttons/ButtonDefault.vue';
 import BaseTableTanStack from '@/components/Tables/BaseTableTanStack.vue'
+import { EyeIcon, PencilSquareIcon } from '@heroicons/vue/24/solid';
 
 import useCorral from "@/ui/composables/Herds/Corral/useCorral.js";
 
@@ -57,12 +58,8 @@ const corralsListColumns = [
     header: 'Ocupación actual',
     width: 20
   }),
-  columnHelper.accessor('capacity', {
-    header: 'Capacidad máxima',
-    width: 20
-  }),
   columnHelper.accessor('location', {
-    header: 'Ubicación',
+    header: 'Ubicación o referencia',
     width: 20
   }),
   columnHelper.accessor('status', {
@@ -112,6 +109,12 @@ onMounted(async () => {
             :nextPage = "nextPage"
             :previousPage = "previousPage"
         >
+          <template #actions="{ row }">
+              <div class="flex space-x-5 px-6 text-sm text-primary text-center">
+                <router-link :to="{ name: 'corral-detail', params: { id: row.original.id } }"><span class="cursor-pointer" title:="Ver detalle"><EyeIcon class="size-5"/></span></router-link>
+                <router-link :to="{ name: 'corral-update', params: { id: row.original.id } }"><span class="cursor-pointer" title:="Editar registro"><PencilSquareIcon class="size-5"/></span></router-link>
+              </div>
+          </template>
         </BaseTableTanStack>
     </div>
 </template>

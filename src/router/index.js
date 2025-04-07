@@ -14,6 +14,8 @@ import CattleUpdateView from '@/ui/views/Herds/Cattle/CattleUpdateView.vue'
 import CattleDetailView from '@/ui/views/Herds/Cattle/CattleDetailView.vue'
 import CorralListView from '@/ui/views/Herds/Corral/CorralListView.vue'
 import CorralAddView from '@/ui/views/Herds/Corral/CorralAddView.vue'
+import CorralDetailView from '@/ui/views/Herds/Corral/CorralDetailView.vue'
+import CorralUpdateView from '@/ui/views/Herds/Corral/CorralUpdateView.vue'
 
 import ExampleView from '@/ui/views/ExampleView.vue'
 
@@ -86,43 +88,42 @@ const routes = [
           }
         ]
       },
-
           // 🐖 CORRALS
-    {
-      path: 'corrals',
-      children: [
-        {
-          path: '',
-          name: 'corrals-list',
-          component: CorralListView,
-          meta: { title: 'Listado de corrales' }
-        },
-        {
-          path: 'add',
-          name: 'corral-add',
-          component: CorralAddView,
-          meta: { title: 'Registro de nuevo corral' }
-        },
-        // {
-        //   path: ':id',
-        //   name: 'corral-detail',
-        //   component: () => import('@/pages/herd/corrals/CorralDetailView.vue'),
-        //   meta: { title: 'Detalle de corral' }
-        // },
-        // {
-        //   path: 'update/:id',
-        //   name: 'corral-update',
-        //   component: () => import('@/pages/herd/corrals/CorralUpdateView.vue'),
-        //   meta: { title: 'Edición de corral' }
-        // },
-        // {
-        //   path: ':id/assign',
-        //   name: 'corral-assign',
-        //   component: () => import('@/pages/herd/corrals/AssignCattleToCorral.vue'),
-        //   meta: { title: 'Asignar ganado a corral' }
-        // }
-      ]
-    }
+      {
+        path: 'corrals',
+        children: [
+          {
+            path: '',
+            name: 'corrals-list',
+            component: CorralListView,
+            meta: { title: 'Listado de corrales' }
+          },
+          {
+            path: 'add',
+            name: 'corral-add',
+            component: CorralAddView,
+            meta: { title: 'Registro de nuevo corral' }
+          },
+          {
+            path: ':id',
+            name: 'corral-detail',
+            component: CorralDetailView,
+            meta: { title: 'Detalle de corral' }
+          },
+          {
+            path: 'update/:id',
+            name: 'corral-update',
+            component: CorralUpdateView,
+            meta: { title: 'Edición de corral' }
+          },
+          // {
+          //   path: ':id/assign',
+          //   name: 'corral-assign',
+          //   component: () => import('@/pages/herd/corrals/AssignCattleToCorral.vue'),
+          //   meta: { title: 'Asignar ganado a corral' }
+          // }
+        ]
+      }
 
     ]
   },

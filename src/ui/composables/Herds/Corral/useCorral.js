@@ -47,17 +47,17 @@ const useCorral = () => {
     }
 
     // VALIDACIONES
-    // const validateUpdateForm = () => {
-    //     const newErrors = {};
-    //     // Validar que todos los campos estén llenos
-    //     if (!cattleModel.value.tagNameNumber) {
-    //         newErrors.tagNameNumber = 'El nombre o número de etiqueta es obligatorio.';
-    //     }
-    //     errors.value = newErrors; // Actualizar los errores
+    const validateUpdateForm = () => {
+        const newErrors = {};
+        // Validar que todos los campos estén llenos
+        if (!corralModel.value.name) {
+            newErrors.name = 'El nombre es obligatorio.';
+        }
+        errors.value = newErrors; // Actualizar los errores
 
-    //     // Si no hay errores, retornar true para proceder con el registro
-    //     return Object.keys(newErrors).length === 0;
-    // }
+        // Si no hay errores, retornar true para proceder con el registro
+        return Object.keys(newErrors).length === 0;
+    }
 
 
     // FUNCIONES
@@ -143,68 +143,68 @@ const useCorral = () => {
         }
     }
 
-    // const getCattleDetail = async (loading = true, userId) => {
-    //     const loader = loading ? $loading.show() : null;
-    //     try {
+    const getCorralDetail = async (loading = true, corralId) => {
+        const loader = loading ? $loading.show() : null;
+        try {
             
-    //         const resp = await Cattle.getCattleDetail(userId);
-    //         if (resp.success == false) throw resp;
+            const resp = await Corral.getCorralDetail(corralId);
+            if (resp.success == false) throw resp;
 
-    //         cattleModel.value = resp
+            corralModel.value = resp
 
-    //         return resp
+            return resp
 
-    //     } catch (error) {
-    //         if (error.code == 401) {
-    //             toast.warning('Tu sesión caducó por seguridad, ingresa nuevamente.')
-    //             window.location.reload();
-    //             return;
-    //         }
-    //         if (error.code == 404) {
-    //             toast.warning(error?.error ? error.error : 'No se encontró el ganado solicitado')
-    //             router.push({ name: 'cattle-list' });
-    //             return;
-    //         }
-    //         toast.error('Ha ocurrido un error al obtener el registro solicitado')
-    //         throw new Error('Error al obtener el registro: ' + error);
-    //     } finally {
-    //         loading ? loader.hide() : null
-    //     }
-    // }
+        } catch (error) {
+            if (error.code == 401) {
+                toast.warning('Tu sesión caducó por seguridad, ingresa nuevamente.')
+                window.location.reload();
+                return;
+            }
+            if (error.code == 404) {
+                toast.warning(error?.error ? error.error : 'No se encontró el corral solicitado')
+                router.push({ name: 'cattle-list' });
+                return;
+            }
+            toast.error('Ha ocurrido un error al obtener el registro solicitado')
+            throw new Error('Error al obtener el corral: ' + error);
+        } finally {
+            loading ? loader.hide() : null
+        }
+    }
 
-    // const updateCattle = async () => {
-    //     const loader = $loading.show();
-    //     try {
-    //         if (!validateUpdateForm()) {
-    //             toast.warning('Revisa los campos para continuar')
-    //             return; // Si hay errores, no procedemos
-    //         }
+    const updateCorral = async () => {
+        const loader = $loading.show();
+        try {
+            if (!validateUpdateForm()) {
+                toast.warning('Revisa los campos para continuar')
+                return; // Si hay errores, no procedemos
+            }
+            
+            const resp = await Corral.updateCorral(corralModel.value);
+            if (resp.success == false) throw resp;
+            corralModel.value = resp
 
-    //         const resp = await Cattle.updateCattle(cattleModel.value);
-    //         if (resp.success == false) throw resp;
-    //         cattleModel.value = resp
-
-    //         toast.success('Se ha actualizado el registro');
-    //         router.push({ name: 'cattle-detail', params: {id: cattleModel.value.id} });
-    //         return;
+            toast.success('Se ha actualizado el registro');
+            router.push({ name: 'corral-detail', params: {id: corralModel.value.id} });
+            return;
 
 
-    //     } catch (error) {
-    //         if (error.code == 401) {
-    //             toast.warning('Tu sesión caducó por seguridad, ingresa nuevamente.')
-    //             window.location.reload();
-    //             return;
-    //         }
-    //         if (error.code == 422) {
-    //             toast.warning(error?.error ? error.error : 'Verifica la información ingresada')
-    //             return;
-    //         }
-    //         toast.error('Ha ocurrido un error al actualizar el registro. Inténtalo de nuevo más tarde')
-    //         throw new Error('Error al actualizar el ganado: ' + error);
-    //     } finally {
-    //         loader.hide()
-    //     }
-    // }
+        } catch (error) {
+            if (error.code == 401) {
+                toast.warning('Tu sesión caducó por seguridad, ingresa nuevamente.')
+                window.location.reload();
+                return;
+            }
+            if (error.code == 422) {
+                toast.warning(error?.error ? error.error : 'Verifica la información ingresada')
+                return;
+            }
+            toast.error('Ha ocurrido un error al actualizar el registro. Inténtalo de nuevo más tarde')
+            throw new Error('Error al actualizar el corral: ' + error);
+        } finally {
+            loader.hide()
+        }
+    }
 
 
 
@@ -219,7 +219,9 @@ const useCorral = () => {
 
         getAllCorralsNoPag,
         getAllCorrals,
-        addCorral
+        addCorral,
+        getCorralDetail,
+        updateCorral
     }
 }
 

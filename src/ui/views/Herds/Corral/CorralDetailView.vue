@@ -5,17 +5,19 @@ import InputGroup from '@/components/Forms/InputGroup.vue'
 import SelectGroupTwo from '@/components/Forms/SelectGroup/SelectGroupTwo.vue'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import DatePickerOne from '@/components/Forms/DatePicker/DatePickerOne.vue'
+import ButtonDefault from '@/components/Buttons/ButtonDefault.vue';
 
 import { onMounted, ref } from 'vue'
 import { useToast } from "vue-toastification";
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute, RouterLink } from 'vue-router';
 import { useLoading } from 'vue-loading-overlay'
 
 import useCorral from "@/ui/composables/Herds/Corral/useCorral.js";
 
-const pageTitle = ref('Registrando nuevo corral')
+const pageTitle = ref('Detalle de corral')
 
 const router = useRouter()
+const route = useRoute();
 
 const toast = useToast({
     timeout: 5000
@@ -28,21 +30,21 @@ const $loading = useLoading({
 const {
   corralModel,
   errors,
-  addCorral
+  getCorralDetail
 } = useCorral();
 
 
 onMounted(async () => {
   const loader = $loading.show()
   try {
-    
+    corralModel.value.id = route.params.id;
+    await getCorralDetail(false, corralModel.value.id);
   } catch (error) {
     toast.error('Ha ocurrido un error, intentalo en un momento')
-    // router.push({ name: 'corrals-list' });
+    router.push({ name: 'corrals-list' });
   } finally {
     loader.hide()
   }
-
 })
 
 </script>
@@ -51,6 +53,14 @@ onMounted(async () => {
   <!-- Breadcrumb Start -->
   <BreadcrumbDefault :pageTitle="pageTitle" />
   <!-- Breadcrumb End -->
+  <div class="flex justify-between items-center pb-2.5">
+    <RouterLink class="flex justify-center items-center" :to="{name:'corral-update', params: {id: corralModel.id}}">
+      <ButtonDefault label="Editar" customClasses="bg-primary/90 text-sm hover:opacity-95 text-white w-21 h-12 md:w-30 md:h-12 rounded-lg">
+        <span>✍️</span>
+      </ButtonDefault>
+    </RouterLink>
+  </div>
+
   <div class="grid grid-row-1 gap-1 sm:grid-cols-2">
     
     <div class="flex flex-col gap-9">
@@ -60,19 +70,18 @@ onMounted(async () => {
               v-model="corralModel.name"
               label="Nombre del corral"
               type="text"
-              placeholder="Ingresa el nombre del corral"
+              isDisabled
               customClasses="w-full mb-4.5"
               :customInputClasses="[{
                 'border focus:border-pink-500 enabled:border-pink-500 border-pink-500 ring-pink-500': errors.name
               }]"
               :errorText="errors.name"
-              isRequired
             />
 
             <InputGroup
                 v-model="corralModel.location"
                 label="Ubicación o referencia"
-                placeholder="Ingresa la ubicación o referencia del corral"
+                isDisabled
                 type="text"
                 customClasses="w-full mb-4.5"
             />
@@ -80,6 +89,7 @@ onMounted(async () => {
             <div class="mb-6">
               <label class="mb-2.5 font-medium text-sm block text-black dark:text-white">Descripción</label>
               <textarea
+                disabled
                 rows="4"
                 v-model="corralModel.description"
                 placeholder="Ingresa la descripción del corral"
@@ -103,11 +113,11 @@ onMounted(async () => {
                 v-model="corralModel.capacity"
                 label="Capacidad máxima del corral"
                 type="number"
-                placeholder="Digitar capacidad máxima"
+                isDisabled
                 customClasses="w-full xl:w-1/2"
               />
               <p class="text-sm w-full xl:w-1/2">
-                Al ingresar la capacidad, se valida el ingreso de nuevo ganado al corral para no superar su capacidad máxima.<br>
+                Al ingresar la capacidad, se valida el ingreso de nuevo ganado al corral para no revasar su máxima capacidad.<br>
                 Al dejar vacío no se limitará el ingreso de nuevo ganado al corral.
               </p>
             </div>
@@ -119,12 +129,4 @@ onMounted(async () => {
 
   </div>
 
-  <div class="flex w-full justify-center mt-8">
-    <button
-      @click="addCorral"
-      class="flex w-full lg:w-1/3 justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90"
-    >
-      Registrar
-    </button>
-  </div>
 </template>

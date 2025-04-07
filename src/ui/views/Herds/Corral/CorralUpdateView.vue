@@ -8,14 +8,15 @@ import DatePickerOne from '@/components/Forms/DatePicker/DatePickerOne.vue'
 
 import { onMounted, ref } from 'vue'
 import { useToast } from "vue-toastification";
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute, RouterLink } from 'vue-router';
 import { useLoading } from 'vue-loading-overlay'
 
 import useCorral from "@/ui/composables/Herds/Corral/useCorral.js";
 
-const pageTitle = ref('Registrando nuevo corral')
+const pageTitle = ref('Editando nuevo corral')
 
 const router = useRouter()
+const route = useRoute();
 
 const toast = useToast({
     timeout: 5000
@@ -28,17 +29,19 @@ const $loading = useLoading({
 const {
   corralModel,
   errors,
-  addCorral
+  getCorralDetail,
+  updateCorral
 } = useCorral();
 
 
 onMounted(async () => {
   const loader = $loading.show()
   try {
-    
+    corralModel.value.id = route.params.id;
+    await getCorralDetail(false, corralModel.value.id);
   } catch (error) {
     toast.error('Ha ocurrido un error, intentalo en un momento')
-    // router.push({ name: 'corrals-list' });
+    router.push({ name: 'corrals-list' });
   } finally {
     loader.hide()
   }
@@ -51,9 +54,11 @@ onMounted(async () => {
   <!-- Breadcrumb Start -->
   <BreadcrumbDefault :pageTitle="pageTitle" />
   <!-- Breadcrumb End -->
+
   <div class="grid grid-row-1 gap-1 sm:grid-cols-2">
     
     <div class="flex flex-col gap-9">
+      
       <DefaultCard>
           <div class="p-6.5">
             <InputGroup
@@ -107,7 +112,7 @@ onMounted(async () => {
                 customClasses="w-full xl:w-1/2"
               />
               <p class="text-sm w-full xl:w-1/2">
-                Al ingresar la capacidad, se valida el ingreso de nuevo ganado al corral para no superar su capacidad máxima.<br>
+                Al ingresar la capacidad, se valida el ingreso de nuevo ganado al corral para no revasar su máxima capacidad.<br>
                 Al dejar vacío no se limitará el ingreso de nuevo ganado al corral.
               </p>
             </div>
@@ -121,10 +126,10 @@ onMounted(async () => {
 
   <div class="flex w-full justify-center mt-8">
     <button
-      @click="addCorral"
+      @click="updateCorral"
       class="flex w-full lg:w-1/3 justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90"
     >
-      Registrar
+      Actualizar
     </button>
   </div>
 </template>

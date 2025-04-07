@@ -23,18 +23,18 @@ export default {
         return (response.success && response.data) ? CorralIterator.ResponseToRegisteredCorralModel(response.data) : response
     },
 
-    // getCattleDetail: async (cattleId) => {
-    //     const response = await CattleRepository.getCattleDetail(cattleId);
+    getCorralDetail: async (corralId) => {
+        const response = await CorralRepository.getCorralDetail(corralId);
 
-    //     return (response.success && response.data) ? CattleIterator.ResponseTocorralModel(response.data) : response
-    // },
+        return (response.success && response.data) ? CorralIterator.ResponseToCorralModel(response.data) : response
+    },
 
-    // updateCattle: async (corralModel) => {
-    //     const request = await CattleIterator.RequestToUpdateCattle(corralModel);
+    updateCorral: async (corralModel) => {
+        const request = await CorralIterator.RequestToUpdateCorral(corralModel);
 
-    //     const response = await CattleRepository.updateCattle(request)
+        const response = await CorralRepository.updateCorral(request)
 
-    //     return (response.success && response.data) ? response.data : response
-    // }
+        return (response.success && response.data) ? response.data : response
+    }
 
 }
