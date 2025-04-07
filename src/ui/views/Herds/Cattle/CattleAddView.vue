@@ -12,6 +12,7 @@ import { useRouter } from 'vue-router';
 import { useLoading } from 'vue-loading-overlay'
 
 import useCattle from "@/ui/composables/Herds/Cattle/useCattle.js";
+import useCorral from "@/ui/composables/Herds/Corral/useCorral.js";
 import useBreed from "@/ui/composables/Catalogs/useBreed.js";
 import useSex from "@/ui/composables/Catalogs/useSex.js";
 
@@ -45,10 +46,17 @@ const {
   getAllSexesNoPag
 } = useSex();
 
+const {
+  corralsList,
+  corralModel,
+  getAllCorralsNoPag
+} = useCorral();
+
 
 onMounted(async () => {
   const loader = $loading.show()
   try {
+    await getAllCorralsNoPag(false);
     await getAllBreedsNoPag(false);
     await getAllSexesNoPag(false);
   } catch (error) {
@@ -63,117 +71,122 @@ onMounted(async () => {
 </script>
 
 <template>
-  <DefaultLayout>
-    <!-- Breadcrumb Start -->
-    <BreadcrumbDefault :pageTitle="pageTitle" />
-    <!-- Breadcrumb End -->
-    <div class="grid grid-row-1 gap-1 sm:grid-cols-2">
-      
-      <div class="flex flex-col gap-9">
-        <DefaultCard>
-          
-            <div class="p-6.5">
-              <InputGroup
-                v-model="cattleModel.tagNameNumber"
-                label="Nombre / Etiqueta"
-                type="text"
-                placeholder="Ingresa el nombre o etiqueta"
-                customClasses="w-full mb-4.5"
-                :customInputClasses="[{
-                  'border focus:border-pink-500 enabled:border-pink-500 border-pink-500 ring-pink-500': errors.tagNameNumber
-                }]"
-                :errorText="errors.tagNameNumber"
-                isRequired
+  <!-- Breadcrumb Start -->
+  <BreadcrumbDefault :pageTitle="pageTitle" />
+  <!-- Breadcrumb End -->
+  <div class="grid grid-row-1 gap-1 sm:grid-cols-2">
+    
+    <div class="flex flex-col gap-9">
+      <DefaultCard>
+        
+          <div class="p-6.5">
+            <InputGroup
+              v-model="cattleModel.tagNameNumber"
+              label="Nombre / Etiqueta"
+              type="text"
+              placeholder="Ingresa el nombre o etiqueta"
+              customClasses="w-full mb-4.5"
+              :customInputClasses="[{
+                'border focus:border-pink-500 enabled:border-pink-500 border-pink-500 ring-pink-500': errors.tagNameNumber
+              }]"
+              :errorText="errors.tagNameNumber"
+              isRequired
+            />
+            
+            <div class="mb-7 flex flex-col gap-6 xl:flex-row">
+              <SelectGroupTwo
+                v-model="cattleModel.sexId"
+                label="Sexo"
+                placeholder="Selecciona sexo"
+                :options="sexList"
+                customClasses="w-full xl:w-1/2"
               />
-              
-              <div class="mb-7 flex flex-col gap-6 xl:flex-row">
-                <SelectGroupTwo
-                  v-model="cattleModel.sexId"
-                  label="Sexo"
-                  placeholder="Selecciona sexo"
-                  :options="sexList"
-                  customClasses="w-full xl:w-1/2"
-                />
-                <SelectGroupTwo
-                  v-model="cattleModel.breedId"
-                  label="Raza"
-                  placeholder="Selecciona raza"
-                  :options="breedList"
-                  customClasses="w-full xl:w-1/2"
-                />
-              </div>
-
-              <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
-                <DatePickerOne
-                  customClasses="w-full xl:w-1/2"
-                  label="Fecha de nacimiento"
-                  placeholder="dd/mm/yyyy"
-                  v-model="cattleModel.birthDate"
-                />
-
-                <InputGroup
-                  v-model="cattleModel.initialWeight"
-                  label="Peso inicial (Kg)"
-                  type="number"
-                  placeholder="Kg"
-                  customClasses="w-full xl:w-1/2"
-                />
-              </div>
-
+              <SelectGroupTwo
+                v-model="cattleModel.breedId"
+                label="Raza"
+                placeholder="Selecciona raza"
+                :options="breedList"
+                customClasses="w-full xl:w-1/2"
+              />
             </div>
 
-        </DefaultCard>
+            <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
+              <DatePickerOne
+                customClasses="w-full xl:w-1/2"
+                label="Fecha de nacimiento"
+                placeholder="dd/mm/yyyy"
+                v-model="cattleModel.birthDate"
+              />
 
-      </div>
-
-      <div class="flex flex-col gap-9">
-
-        <DefaultCard>
-          
-            <div class="p-6.5">
-              <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
-                <DatePickerOne
-                  customClasses="w-full xl:w-1/2 mb-4.5"
-                  label="Fecha de adquisición"
-                  placeholder="dd/mm/yyyy"
-                  v-model="cattleModel.acquisitionDate"
-                />
-
-                <InputGroup
-                  v-model="cattleModel.purchaseCost"
-                  label="Costo de adquisición ($)"
-                  type="number"
-                  placeholder="$"
-                  customClasses="w-full xl:w-1/2"
-                />
-              </div>
-
-              <div class="mb-6">
-                <label class="mb-2.5 block text-black dark:text-white"> Notas iniciales </label>
-                <textarea
-                  rows="4"
-                  v-model="cattleModel.initialNotes"
-                  placeholder="Escribe notas iniciales"
-                  class="w-full rounded border-[1.5px] text-black border-stroke bg-transparent py-3 px-5 font-normal outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:text-white dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                ></textarea>
-              </div>
-
+              <InputGroup
+                v-model="cattleModel.initialWeight"
+                label="Peso inicial (Kg)"
+                type="number"
+                placeholder="Kg"
+                customClasses="w-full xl:w-1/2"
+              />
             </div>
 
-        </DefaultCard>
+            <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
+              <SelectGroupTwo
+                v-model="cattleModel.corralId"
+                label="Corral asignado"
+                placeholder="Asignar a un corral"
+                :options="corralsList"
+                customClasses="w-full xl:w-1/2"
+              />
+            </div>
 
-      </div>
+          </div>
+
+      </DefaultCard>
 
     </div>
 
-    <div class="flex w-full justify-center mt-8">
-      <button
-        @click="addCattle"
-        class="flex w-full lg:w-1/3 justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90"
-      >
-        Registrar
-      </button>
+    <div class="flex flex-col gap-9">
+      <DefaultCard>
+        
+          <div class="p-6.5">
+            <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
+              <DatePickerOne
+                customClasses="w-full xl:w-1/2 mb-4.5"
+                label="Fecha de adquisición"
+                placeholder="dd/mm/yyyy"
+                v-model="cattleModel.acquisitionDate"
+              />
+
+              <InputGroup
+                v-model="cattleModel.purchaseCost"
+                label="Costo de adquisición ($)"
+                type="number"
+                placeholder="$"
+                customClasses="w-full xl:w-1/2"
+              />
+            </div>
+
+            <div class="mb-6">
+              <label class="mb-2.5 block text-black dark:text-white"> Notas iniciales </label>
+              <textarea
+                rows="4"
+                v-model="cattleModel.initialNotes"
+                placeholder="Escribe notas iniciales"
+                class="w-full rounded border-[1.5px] text-black border-stroke bg-transparent py-3 px-5 font-normal outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:text-white dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+              ></textarea>
+            </div>
+
+          </div>
+
+      </DefaultCard>
     </div>
 
-  </DefaultLayout>
+  </div>
+
+  <div class="flex w-full justify-center mt-8">
+    <button
+      @click="addCattle"
+      class="flex w-full lg:w-1/3 justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90"
+    >
+      Registrar
+    </button>
+  </div>
 </template>

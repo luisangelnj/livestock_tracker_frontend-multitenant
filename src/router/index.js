@@ -6,13 +6,16 @@ import ForgotPasswordView from '@/ui/views/Authentication/ForgotPasswordView.vue
 import ResetPasswordView from '@/ui/views/Authentication/ResetPasswordView.vue'
 import VerifyEmailNoticeView from '@/ui/views/Authentication/VerifyEmailNoticeView.vue'
 import VerifyEmailView from '@/ui/views/Authentication/VerifyEmailView.vue'
+import DefaultLayoutRouterView from '@/layouts/DefaultLayoutRouterView.vue'
 import DashboardView from '@/ui/views/Dashboard/DashboardView.vue'
 import CattleListView from '@/ui/views/Herds/Cattle/CattleListView.vue'
 import CattleAddView from '@/ui/views/Herds/Cattle/CattleAddView.vue'
 import CattleUpdateView from '@/ui/views/Herds/Cattle/CattleUpdateView.vue'
 import CattleDetailView from '@/ui/views/Herds/Cattle/CattleDetailView.vue'
+import CorralListView from '@/ui/views/Herds/Corral/CorralListView.vue'
+import CorralAddView from '@/ui/views/Herds/Corral/CorralAddView.vue'
+
 import ExampleView from '@/ui/views/ExampleView.vue'
-import DefaultLayoutRouterView from '@/layouts/DefaultLayoutRouterView.vue'
 
 import { useLoading } from 'vue-loading-overlay'
 import { useToast } from "vue-toastification";
@@ -47,12 +50,82 @@ const routes = [
 
   { path: '/dashboard', name: 'dashboard', component: DashboardView, meta: { title: 'Dashboard', requiresAuth: true } },
   
-  // Rutas de gestión de ganado
-  { path: '/herd/cattle', name: 'cattle-list', component: CattleListView, meta: { title: 'Listado de ganado', requiresAuth: true } },
-  { path: '/herd/cattle/:id', name: 'cattle-detail', component: CattleDetailView, meta: { title: 'Detalle de ganado', requiresAuth: true } },
-  { path: '/herd/cattle/add', name: 'cattle-add', component: CattleAddView, meta: { title: 'Registro de nuevo ganado', requiresAuth: true } },
-  { path: '/herd/cattle/update/:id', name: 'cattle-update', component: CattleUpdateView, meta: { title: 'Edición de ganado', requiresAuth: true } },
 
+  {
+    path: '/herd',
+    component: DefaultLayoutRouterView, // o uno llamado HerdLayout si quieres aislarlo
+    meta: { requiresAuth: true },
+    children: [
+      // 🐄 CATTLE
+      {
+        path: 'cattle',
+        children: [
+          {
+            path: '',
+            name: 'cattle-list',
+            component: CattleListView,
+            meta: { title: 'Listado de ganado' }
+          },
+          {
+            path: 'add',
+            name: 'cattle-add',
+            component: CattleAddView,
+            meta: { title: 'Registro de nuevo ganado' }
+          },
+          {
+            path: ':id',
+            name: 'cattle-detail',
+            component: CattleDetailView,
+            meta: { title: 'Detalle de ganado' }
+          },
+          {
+            path: 'update/:id',
+            name: 'cattle-update',
+            component: CattleUpdateView,
+            meta: { title: 'Edición de ganado' }
+          }
+        ]
+      },
+
+          // 🐖 CORRALS
+    {
+      path: 'corrals',
+      children: [
+        {
+          path: '',
+          name: 'corrals-list',
+          component: CorralListView,
+          meta: { title: 'Listado de corrales' }
+        },
+        {
+          path: 'add',
+          name: 'corral-add',
+          component: CorralAddView,
+          meta: { title: 'Registro de nuevo corral' }
+        },
+        // {
+        //   path: ':id',
+        //   name: 'corral-detail',
+        //   component: () => import('@/pages/herd/corrals/CorralDetailView.vue'),
+        //   meta: { title: 'Detalle de corral' }
+        // },
+        // {
+        //   path: 'update/:id',
+        //   name: 'corral-update',
+        //   component: () => import('@/pages/herd/corrals/CorralUpdateView.vue'),
+        //   meta: { title: 'Edición de corral' }
+        // },
+        // {
+        //   path: ':id/assign',
+        //   name: 'corral-assign',
+        //   component: () => import('@/pages/herd/corrals/AssignCattleToCorral.vue'),
+        //   meta: { title: 'Asignar ganado a corral' }
+        // }
+      ]
+    }
+
+    ]
+  },
 
 
   {

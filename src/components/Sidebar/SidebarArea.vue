@@ -81,7 +81,10 @@ const menuGroups = ref([
                 </svg>`,
         label: 'Rebaño',
         route: '#',
-        children: [{ label: 'Ganado', route: '/herd/cattle' }]
+        children: [
+          { label: 'Ganado', route: '/herd/cattle' },
+          { label: 'Corrales', route: '/herd/corrals' }
+        ]
       }
     ]
   },

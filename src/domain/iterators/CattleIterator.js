@@ -8,6 +8,7 @@ export default {
                     acquisitionDate: item.acquisition_date ? item.acquisition_date.split('-').reverse().join('/') : '-',
                     sex: item?.sex?.name ?? '-',
                     breed: item?.breed?.name ?? '-',
+                    corral: item?.corral?.name ?? '-',
                     registerDate: new Date( item.created_at ).toLocaleDateString("es-MX"),
                     status: item.status.name
                 }
@@ -24,6 +25,7 @@ export default {
             initial_weight: cattleModel.initialWeight,
             sex_id: cattleModel.sexId, 
             breed_id: cattleModel.breedId,
+            corral_id: cattleModel.corralId,
             initial_notes : cattleModel.initialNotes
         }
     },
@@ -38,6 +40,7 @@ export default {
             sex_id: cattleModel.sexId, 
             breed_id: cattleModel.breedId,
             status_id: cattleModel.statusId,
+            corral_id: cattleModel.corralId,
             initial_notes : cattleModel.initialNotes
         }
     },
@@ -59,6 +62,8 @@ export default {
             sex: data?.sex?.name ?? '',
             breedId: data?.breed?.id ?? '',
             breed: data?.breed?.name ?? '',
+            corralId: data?.corral?.id ?? '',
+            corral: data?.corral?.name ?? '',
             statusId: data?.status?.id ?? '',
             status: data.status?.name ?? '',
             registerDate: new Date( data.created_at ).toLocaleDateString("es-MX"),

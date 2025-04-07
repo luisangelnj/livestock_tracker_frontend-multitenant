@@ -106,7 +106,7 @@ const handlePreviousPage = () => {
         <div class="flex justify-end items-center mt-4 space-x-2 select-none">
 			<button
 				@click="handlePreviousPage"
-				:disabled="props.page == 1 ||  searching"
+				:disabled="props.page == 1 || props.searching"
 				class="px-4 py-2 bg-gray-200 rounded-lg enabled:hover:bg-gray-300 disabled:opacity-40"
 			>
 				&lt;
@@ -116,7 +116,7 @@ const handlePreviousPage = () => {
 			</span>
 			<button
 				@click="handleNextPage"
-				:disabled="props.page >= props.totalPages || searching"
+				:disabled="props.page >= props.totalPages || props.searching"
 				class="px-4 py-2 bg-gray-200 rounded-lg enabled:hover:bg-gray-300 disabled:opacity-40"
 			>
 				&gt;

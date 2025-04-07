@@ -32,6 +32,8 @@ const useCattle = () => {
         sexId: '', //
         breed: '', //
         breedId: '', //
+        corral: '',
+        corralId: '',
         initialNotes: '', //
         registerDate: '',
         status: ''
