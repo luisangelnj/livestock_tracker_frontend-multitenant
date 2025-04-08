@@ -59,7 +59,7 @@ const handleChangeEvent = (e) => {
         :class="{ 'text-black dark:text-white': isOptionSelected }"
         @change="handleChangeEvent"
       >
-        <option :value="''" disabled>{{ placeholder }}</option>
+        <option :value="''">{{ placeholder }}</option>
         <option v-for="option in options" :key="option.id" :value="option.id">{{option.name}}</option>
       </select>
 

@@ -185,7 +185,7 @@ const useCorral = () => {
             corralModel.value = resp
 
             toast.success('Se ha actualizado el registro');
-            router.push({ name: 'corral-detail', params: {id: corralModel.value.id} });
+            router.push({ name: 'corrals-list'});
             return;
 
 

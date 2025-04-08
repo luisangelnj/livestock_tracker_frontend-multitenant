@@ -13,10 +13,20 @@ export default {
         }
     },
     RequestToRegisterWeight: (data) => {
+        const formatDate = (dateStr) => {
+            if (!dateStr || typeof dateStr !== 'string') return '';
+        
+            const parts = dateStr.split('/');
+            if (parts.length !== 3) return '';
+        
+            const [day, month, year] = parts;
+            return `${year}-${month}-${day}`;
+        };
+
         return {
             cattle_id: data.cattleId,
             weight: data.weight,
-            register_date: data.registerDate
+            register_date: formatDate(data.registerDate) 
         }
     }
 }

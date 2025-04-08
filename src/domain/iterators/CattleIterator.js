@@ -17,10 +17,20 @@ export default {
         }
     },
     RequestToAddCattle: (cattleModel) => {
+        const formatDate = (dateStr) => {
+            if (!dateStr || typeof dateStr !== 'string') return '';
+        
+            const parts = dateStr.split('/');
+            if (parts.length !== 3) return '';
+        
+            const [day, month, year] = parts;
+            return `${year}-${month}-${day}`;
+        };
+
         return {
             tag_name_number: cattleModel.tagNameNumber,
-            acquisition_date: cattleModel.acquisitionDate,
-            birth_date: cattleModel.birthDate,
+            acquisition_date: formatDate(cattleModel.acquisitionDate),
+            birth_date: formatDate(cattleModel.birthDate),
             purchase_cost: cattleModel.purchaseCost,
             initial_weight: cattleModel.initialWeight,
             sex_id: cattleModel.sexId, 
@@ -30,11 +40,21 @@ export default {
         }
     },
     RequestToUpdateCattle: (cattleModel) => {
+        const formatDate = (dateStr) => {
+            if (!dateStr || typeof dateStr !== 'string') return '';
+        
+            const parts = dateStr.split('/');
+            if (parts.length !== 3) return '';
+        
+            const [day, month, year] = parts;
+            return `${year}-${month}-${day}`;
+        };
+
         return {
             id: cattleModel.id,
             tag_name_number: cattleModel.tagNameNumber,
-            acquisition_date: cattleModel.acquisitionDate,
-            birth_date: cattleModel.birthDate,
+            acquisition_date: formatDate(cattleModel.acquisitionDate),
+            birth_date: formatDate(cattleModel.birthDate),
             purchase_cost: cattleModel.purchaseCost,
             initial_weight: cattleModel.initialWeight,
             sex_id: cattleModel.sexId, 

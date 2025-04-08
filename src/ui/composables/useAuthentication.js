@@ -4,6 +4,7 @@ import Authentication from '@/domain/useCases/Authentication'
 import { useAuthStore } from '@/stores/authStore.js';
 import { useRouter } from 'vue-router';
 import { useLoading } from 'vue-loading-overlay'
+import { useSidebarStore } from '@/stores/sidebar'
 
 const useAuthentication = () => {
 
@@ -17,6 +18,7 @@ const useAuthentication = () => {
         color: '#007BFF'
     });
     const authStore = useAuthStore();
+    const sidebarStore = useSidebarStore()
 
     // VARIABLES
     const userModel = ref({
@@ -279,6 +281,8 @@ const useAuthentication = () => {
             if (!result) {
                 throw Error("Error al cerrar sesión");
             }
+            sidebarStore.page = ''
+            sidebarStore.selected = ''
             if (result && result.success === true) {
                 router.push({ name: 'login' });
                 toast.success('¡Has cerrado sesión correctamente!');
