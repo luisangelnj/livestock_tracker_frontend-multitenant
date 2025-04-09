@@ -15,7 +15,7 @@ export default {
                     name: item.name,
                     location: item.location ?? '-',
                     capacity: item.capacity ?? 'Sin límite',
-                    currentOccupancy: (item?.cattle_count ?? '0') + ' de ' + (item?.capacity ?? 'Sin límite'),
+                    currentOccupancy: item?.cattle_count,
                     createdAt: new Date( item.created_at ).toLocaleDateString("es-MX"),
                     status: item.status
                 }
@@ -51,7 +51,25 @@ export default {
             name: data.name,
             location: data.location,
             capacity: data.capacity,
+            currentOccupancy: data.cattle_count,
             description: data.description
         }
     },
+    ResponseToCorralCattleList: (data) => {
+        return {
+            values: data.data.map(item => {
+                return {
+                    id: item.id,
+                    tagNameNumber: item.tag_name_number,
+                    acquisitionDate: item.acquisition_date ? item.acquisition_date.split('-').reverse().join('/') : '-',
+                    sex: item?.sex?.name ?? '-',
+                    breed: item?.breed?.name ?? '-',
+                    corral: item?.corral?.name ?? '-',
+                    registerDate: new Date( item.created_at ).toLocaleDateString("es-MX"),
+                    status: item.status.name
+                }
+            }),
+            totalPages: data.last_page
+        }
+    }
 }

@@ -15,11 +15,13 @@ const useCorral = () => {
         color: '#007BFF'
     });
 
-    const page = ref(1);
-    const totalPages = ref()
-    const perPage = ref(15)
-    const searchQuery = ref('');
-
+    const corralPagination = ref({
+        page: 1,
+        totalPages: '',
+        perPage: 15,
+        searchQuery: '',
+        searching: false
+    })
     const corralsList = ref([]);
     const corralModel = ref([{
         id: null,
@@ -31,6 +33,14 @@ const useCorral = () => {
         status: '',
         createdAt: ''
     }]);
+    const corralCattlePagination = ref({
+        page: 1,
+        totalPages: '',
+        perPage: 15,
+        searchQuery: '',
+        searching: false
+    })
+    const corralCattleList = ref([])
     const errors = ref({});
 
     // VALIDACIONES
@@ -89,11 +99,13 @@ const useCorral = () => {
         const loader = loading ? $loading.show() : null;
         try {
             
-            const resp = await Corral.getAllCorrals(page.value, perPage.value, searchQuery.value);
+            const resp = await Corral.getAllCorrals(corralPagination.value.page, corralPagination.value.perPage, corralPagination.value.searchQuery);
             if (resp.success == false) throw resp;
 
             corralsList.value = resp.values
-            totalPages.value = resp.totalPages
+            corralPagination.value.totalPages = resp.totalPages
+            console.log(corralPagination.value);
+            
 
             return resp
 
@@ -172,6 +184,36 @@ const useCorral = () => {
         }
     }
 
+    const getCorralCattleList = async (loading = true, corralId) => {
+        const loader = loading ? $loading.show() : null;
+        try {
+
+            const resp = await Corral.getCorralCattleList(corralId);
+            if (resp.success == false) throw resp;
+
+            corralCattleList.value = resp.values
+            corralCattlePagination.value.totalPages = resp.totalPages
+
+            return resp
+            
+        } catch (error) {
+            if (error.code == 401) {
+                toast.warning('Tu sesión caducó por seguridad, ingresa nuevamente.')
+                window.location.reload();
+                return;
+            }
+            if (error.code == 404) {
+                toast.warning(error?.error ? error.error : 'No se encontró el corral solicitado')
+                router.push({ name: 'cattle-list' });
+                return;
+            }
+            toast.error('Ha ocurrido un error al obtener el registro solicitado')
+            throw new Error('Error al obtener el corral: ' + error);
+        } finally {
+            loading ? loader.hide() : null
+        }
+    }
+
     const updateCorral = async () => {
         const loader = $loading.show();
         try {
@@ -209,18 +251,18 @@ const useCorral = () => {
 
 
     return {
-        page,
-        totalPages,
-        perPage,
-        searchQuery,
+        corralPagination,
+        corralCattlePagination,
         corralsList,
         corralModel,
+        corralCattleList,
         errors,
 
         getAllCorralsNoPag,
         getAllCorrals,
         addCorral,
         getCorralDetail,
+        getCorralCattleList,
         updateCorral
     }
 }

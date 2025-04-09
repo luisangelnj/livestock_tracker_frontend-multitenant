@@ -161,4 +161,30 @@ export default {
         }
     },
 
+    async getCorralCattleList(corralId) {
+        try {
+            
+            const response = await axios.get(`/corrals/${corralId}/cattle-list`);
+
+            // Verifica si la respuesta es exitosa
+            if (response.status === 200) {
+                return {
+                    code: 200,
+                    success: true,
+                    data: response.data.data
+                };
+            }
+
+        } catch (error) {
+            
+            // Retorna un objeto de error
+            return {
+                code: error.status ?? 500,
+                success: false,
+                error: error?.response?.data?.error?.details ? error?.response?.data?.error?.details : error.message
+            };
+
+        }
+    }
+
 }

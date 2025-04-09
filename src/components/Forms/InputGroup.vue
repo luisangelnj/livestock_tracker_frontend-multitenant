@@ -3,6 +3,10 @@ import { defineEmits, ref, watch, defineComponent } from 'vue';
 const props = defineProps({
   label: String,
   type: String,
+  step: {
+    type: Number,
+    default: null
+  },
   placeholder: String,
   modelValue: [String, Number],
   customClasses: String,
@@ -35,6 +39,7 @@ const updateValue = (event) => {
     </label>
     <input
       :type="type"
+      :step="step !== null ? step : undefined"
       :placeholder="placeholder"
       v-model="localInputValue"
       @input="updateValue"

@@ -37,8 +37,8 @@ const columns = [
     header: 'Nombre / Etiqueta',
     width: 15
   }),
-  columnHelper.accessor('acquisitionDate', {
-    header: 'Fecha adquisición',
+  columnHelper.accessor('corral', {
+    header: 'Corral actual',
     width: 15
   }),
   columnHelper.accessor('sex', {
@@ -49,8 +49,8 @@ const columns = [
     header: 'Raza',
     width: 15
   }),
-  columnHelper.accessor('corral', {
-    header: 'Corral actual',
+  columnHelper.accessor('acquisitionDate', {
+    header: 'Fecha adquisición',
     width: 15
   }),
   columnHelper.accessor('status', {

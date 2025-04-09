@@ -9,7 +9,7 @@ const props = defineProps({
     columns: Array, // Asegura que siempre sea un array
     withHeader: {type:Boolean, default:true},
     page: Number, // Página actual
-    totalPages: Number, // Total de páginas
+    totalPages: [Number, String], // <-- Acepta número o string vacío
     nextPage: Function, // Función para avanzar de página
     previousPage: Function, // Función para retroceder de página
     searching: {type:Boolean, default: false}
@@ -85,17 +85,23 @@ const handlePreviousPage = () => {
                     class="hover:bg-gray-50 transition-colors divide-x-2 divide-gray-2 hover:divide-gray-100"
 				>
                     <!-- Celdas de la tabla -->
-					<td
-						v-for="cell in row.getVisibleCells()"
-						:key="cell.id"
-						class="px-6 py-3 text-sm text-gray-700"
-					>
-						{{ cell.getValue() }}
-					</td>
+                    <td
+                        v-for="cell in row.getVisibleCells()"
+                        :key="cell.id"
+                        class="px-6 py-3 text-sm text-gray-700"
+                    >
+                        <slot
+                            :name="'cell-' + cell.column.id"
+                            :row="row"
+                            :value="cell.getValue()"
+                        >
+                            {{ cell.getValue() }}
+                        </slot>
+                    </td>
 					<td class="px-6 py-3 text-sm text-primary text-center">
                         <slot name="actions" :row="row">
                             <router-link to="#">
-                                <span class="cursor-pointer" title="Ver detalle"><EyeIcon class="size-5"/></span>
+                                <span class="cursor-pointer" title="Ver detalle">Editar</span>
                             </router-link>
                         </slot>
 					</td>

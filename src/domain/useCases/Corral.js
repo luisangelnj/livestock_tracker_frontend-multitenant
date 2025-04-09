@@ -29,6 +29,12 @@ export default {
         return (response.success && response.data) ? CorralIterator.ResponseToCorralModel(response.data) : response
     },
 
+    getCorralCattleList: async (corralId) => {
+        const response = await CorralRepository.getCorralCattleList(corralId)
+
+        return (response.success && response.data) ? CorralIterator.ResponseToCorralCattleList(response.data) : response
+    },
+
     updateCorral: async (corralModel) => {
         const request = await CorralIterator.RequestToUpdateCorral(corralModel);
 

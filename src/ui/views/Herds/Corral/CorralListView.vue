@@ -1,8 +1,10 @@
 <script setup>
 import { useVueTable, createColumnHelper, getCoreRowModel } from '@tanstack/vue-table';
 import { onMounted, ref } from 'vue'
+import _ from 'lodash';
 
 import InputGroup from '@/components/Forms/InputGroup.vue'
+import ProgressBarOne from '@/components/ProgressBar/ProgressBarOne.vue'
 import ButtonDefault from '@/components/Buttons/ButtonDefault.vue';
 import BaseTableTanStack from '@/components/Tables/BaseTableTanStack.vue'
 import { EyeIcon, PencilSquareIcon } from '@heroicons/vue/24/solid';
@@ -10,13 +12,9 @@ import { EyeIcon, PencilSquareIcon } from '@heroicons/vue/24/solid';
 import useCorral from "@/ui/composables/Herds/Corral/useCorral.js";
 
 const pageTitle = ref('Listado de corrales')
-const searching = ref(false)
 
 const {
-  page,
-  totalPages,
-  perPage,
-  searchQuery,
+  corralPagination,
   corralsList,
   getAllCorrals
 } = useCorral();
@@ -24,25 +22,26 @@ const {
 
 // Navegación entre páginas
 const nextPage = async () => {
-    searching.value = true
-    page.value++;
-    await getAllWeightHistory(false, cattleModel.value.id);
-    searching.value = false
+    corralPagination.value.searching = true
+    corralPagination.value.page++;
+    await getAllCorrals(false);
+    corralPagination.value.searching = false
 };
 
 const previousPage = async () => {
-    searching.value = true
-    page.value--;
-    await getAllWeightHistory(false, cattleModel.value.id);
-    searching.value = false
+    corralPagination.value.searching = true
+    corralPagination.value.page--;
+    await getAllCorrals(false);
+    corralPagination.value.searching = false
 };
 
 const searchCorrals = async () => {
-  searching.value = true
-  page.value = 1;
+  corralPagination.value.searching = true
+  corralPagination.value.page = 1;
   await getAllCorrals(false);
-  searching.value = false;
+  corralPagination.value.searching = false;
 }
+const debounceSearchQuery = _.debounce(searchCorrals, 450);
 
 
 // Helper para crear columnas
@@ -70,9 +69,9 @@ const corralsListColumns = [
 
 
 onMounted(async () => {
-  searching.value = true;
+  corralPagination.value.searching = true;
   await getAllCorrals(true);
-  searching.value = false;
+  corralPagination.value.searching = false;
 })
 
 </script>
@@ -83,11 +82,12 @@ onMounted(async () => {
             {{ pageTitle }}
         </h2>
         <InputGroup
-            v-model="searchQuery"
+            v-model="corralPagination.searchQuery"
             type="text"
             placeholder="Buscar"
             customClasses="w-1/2 md:w-1/3"
             customInputClasses="border-gray-400/65"
+            @update:model-value="debounceSearchQuery"
         />
     </div>
     <div class="flex justify-between items-center pb-2">
@@ -103,12 +103,20 @@ onMounted(async () => {
             :columns = "corralsListColumns"
             :withHeader = true
             :data = "corralsList"
-            :page = "page"
-            :totalPages = "totalPages"
-            :searching = "searching"
+            :page = "corralPagination.page"
+            :totalPages = "corralPagination.totalPages"
+            :searching = "corralPagination.searching"
             :nextPage = "nextPage"
             :previousPage = "previousPage"
         >
+          <!-- Slot personalizado para currentOccupancy -->
+          <template #cell-currentOccupancy="{ row }">
+            <ProgressBarOne 
+              :value="row.original.currentOccupancy" 
+              :max="row.original.capacity"
+              error="Libre"
+            />
+          </template>
           <template #actions="{ row }">
               <div class="flex space-x-5 px-6 text-sm text-primary text-center">
                 <router-link :to="{ name: 'corral-detail', params: { id: row.original.id } }"><span class="cursor-pointer" title:="Ver detalle"><EyeIcon class="size-5"/></span></router-link>

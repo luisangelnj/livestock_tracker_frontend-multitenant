@@ -2,11 +2,10 @@
 import BreadcrumbDefault from '@/components/Breadcrumbs/BreadcrumbDefault.vue'
 import DefaultCard from '@/components/Forms/DefaultCard.vue'
 import InputGroup from '@/components/Forms/InputGroup.vue'
-import SelectGroupTwo from '@/components/Forms/SelectGroup/SelectGroupTwo.vue'
-import DefaultLayout from '@/layouts/DefaultLayout.vue'
-import DatePickerOne from '@/components/Forms/DatePicker/DatePickerOne.vue'
 import ButtonDefault from '@/components/Buttons/ButtonDefault.vue';
+import BaseTableTanStack from '@/components/Tables/BaseTableTanStack.vue'
 
+import { createColumnHelper } from '@tanstack/vue-table';
 import { onMounted, ref } from 'vue'
 import { useToast } from "vue-toastification";
 import { useRouter, useRoute, RouterLink } from 'vue-router';
@@ -29,9 +28,55 @@ const $loading = useLoading({
 
 const {
   corralModel,
+  corralCattleList,
+  corralCattlePagination,
   errors,
-  getCorralDetail
+  getCorralDetail,
+  getCorralCattleList,
 } = useCorral();
+
+
+// Helper para crear columnas
+const columnHelper = createColumnHelper();
+
+// Definición de columnas
+const corralCattleListColumns = [
+  columnHelper.accessor('tagNameNumber', {
+    header: 'Nombre / Etiqueta',
+    width: 15
+  }),
+  columnHelper.accessor('sex', {
+    header: 'Sexo',
+    width: 15
+  }),
+  columnHelper.accessor('breed', {
+    header: 'Raza',
+    width: 15
+  }),
+  columnHelper.accessor('acquisitionDate', {
+    header: 'Fecha adquisición',
+    width: 15
+  }),
+  columnHelper.accessor('status', {
+    header: 'Estatus',
+    width: 15
+  }),
+];
+
+// Navegación entre páginas
+const corralCattleListNextPage = async () => {
+  corralCattlePagination.value.searching = true
+  corralCattlePagination.value.page++;
+  await getCorralCattleList(false);
+  corralCattlePagination.value.searching = false
+};
+
+const corralCattleListPreviousPage = async () => {
+  corralCattlePagination.value.searching = true
+  corralCattlePagination.value.page--;
+  await getCorralCattleList(false);
+  corralCattlePagination.value.searching = false
+};
 
 
 onMounted(async () => {
@@ -39,9 +84,10 @@ onMounted(async () => {
   try {
     corralModel.value.id = route.params.id;
     await getCorralDetail(false, corralModel.value.id);
+    await getCorralCattleList(false, corralModel.value.id)
   } catch (error) {
     toast.error('Ha ocurrido un error, intentalo en un momento')
-    router.push({ name: 'corrals-list' });
+    // router.push({ name: 'corrals-list' });
   } finally {
     loader.hide()
   }
@@ -65,13 +111,14 @@ onMounted(async () => {
     
     <div class="flex flex-col gap-9">
       <DefaultCard>
-          <div class="p-6.5">
+
+          <div class="p-6.5 space-y-4.5">
             <InputGroup
               v-model="corralModel.name"
               label="Nombre del corral"
               type="text"
               isDisabled
-              customClasses="w-full mb-4.5"
+              customClasses="w-full"
               :customInputClasses="[{
                 'border focus:border-pink-500 enabled:border-pink-500 border-pink-500 ring-pink-500': errors.name
               }]"
@@ -83,7 +130,7 @@ onMounted(async () => {
                 label="Ubicación o referencia"
                 isDisabled
                 type="text"
-                customClasses="w-full mb-4.5"
+                customClasses="w-full"
             />
 
             <div class="mb-6">
@@ -92,39 +139,55 @@ onMounted(async () => {
                 disabled
                 rows="4"
                 v-model="corralModel.description"
-                placeholder="Ingresa la descripción del corral"
-                class="w-full rounded border-[1.5px] text-black border-stroke bg-transparent py-3 px-5 font-normal outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:text-white dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                class="resize-none w-full rounded border-[1.5px] text-black border-stroke bg-transparent py-3 px-5 font-normal outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:text-white dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
               ></textarea>
             </div>
 
           </div>
 
       </DefaultCard>
-
     </div>
 
     <div class="flex flex-col gap-9">
-
       <DefaultCard>
         
-          <div class="p-6.5">
-            <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
-              <InputGroup
-                v-model="corralModel.capacity"
-                label="Capacidad máxima del corral"
-                type="number"
-                isDisabled
-                customClasses="w-full xl:w-1/2"
-              />
-              <p class="text-sm w-full xl:w-1/2">
-                Al ingresar la capacidad, se valida el ingreso de nuevo ganado al corral para no revasar su máxima capacidad.<br>
-                Al dejar vacío no se limitará el ingreso de nuevo ganado al corral.
-              </p>
-            </div>
+          <div class="p-6.5 space-y-4.5">
+            <InputGroup
+              v-model="corralModel.capacity"
+              label="Capacidad máxima del corral"
+              type="number"
+              isDisabled
+              customClasses="w-full"
+            />
+            <InputGroup
+              v-if="corralModel.currentOccupancy > 0"
+              v-model="corralModel.currentOccupancy"
+              label="Ocupación actual del corral"
+              type="number"
+              isDisabled
+              customClasses="w-full"
+            />
           </div>
 
       </DefaultCard>
+    </div>
 
+    <div class="flex flex-col gap-9 sm:col-span-2">
+      <DefaultCard cardTitle="Ganado activo en el corral">
+        <div class="text-center min-h-20">
+          <BaseTableTanStack
+            :columns = "corralCattleListColumns"
+            :withHeader = true
+            :data = "corralCattleList"
+            :page = "corralCattlePagination.page"
+            :totalPages = "corralCattlePagination.totalPages"
+            :searching = "corralCattlePagination.searching"
+            :nextPage = "corralCattleListNextPage"
+            :previousPage = "corralCattleListPreviousPage"
+          >
+          </BaseTableTanStack>
+        </div>
+      </DefaultCard>
     </div>
 
   </div>

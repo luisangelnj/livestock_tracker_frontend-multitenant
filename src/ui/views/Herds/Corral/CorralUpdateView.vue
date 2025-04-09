@@ -105,6 +105,7 @@ onMounted(async () => {
           <div class="p-6.5">
             <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
               <InputGroup
+                :step=1
                 v-model="corralModel.capacity"
                 label="Capacidad máxima del corral"
                 type="number"
@@ -112,8 +113,8 @@ onMounted(async () => {
                 customClasses="w-full xl:w-1/2"
               />
               <p class="text-sm w-full xl:w-1/2">
-                Al ingresar la capacidad, se valida el ingreso de nuevo ganado al corral para no revasar su máxima capacidad.<br>
-                Al dejar vacío no se limitará el ingreso de nuevo ganado al corral.
+                Si se define una capacidad máxima, se impedirá superar ese límite al ingresar ganado.<br>
+                Si se deja en blanco, no se aplicará ningún límite.
               </p>
             </div>
           </div>
