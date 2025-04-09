@@ -104,8 +104,6 @@ const useCorral = () => {
 
             corralsList.value = resp.values
             corralPagination.value.totalPages = resp.totalPages
-            console.log(corralPagination.value);
-            
 
             return resp
 

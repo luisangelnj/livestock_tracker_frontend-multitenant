@@ -261,6 +261,8 @@ const useAuthentication = () => {
                 }
             }
             if (result && result.success === true) {
+                sidebarStore.page = 'Dashboard'
+                sidebarStore.selected = ''
                 router.push({ name: 'dashboard' });
                 toast.success('¡Iniciaste sesión, bienvenido!');
                 return;

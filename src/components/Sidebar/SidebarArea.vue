@@ -82,8 +82,8 @@ const menuGroups = ref([
         label: 'Rebaño',
         route: '',
         children: [
+          { label: 'Corrales', route: '/herd/corrals' },
           { label: 'Ganado', route: '/herd/cattle' },
-          { label: 'Corrales', route: '/herd/corrals' }
         ]
       }
     ]
