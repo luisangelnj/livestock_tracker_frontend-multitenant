@@ -133,7 +133,7 @@ const useCorral = () => {
             corralModel.value = resp
 
             toast.success('Se ha registrado exitosamente');
-            router.push({ name: 'corrals-list' });
+            router.replace({ name: 'corrals-list' });
             return;
 
         } catch (error) {
@@ -172,7 +172,7 @@ const useCorral = () => {
             }
             if (error.code == 404) {
                 toast.warning(error?.error ? error.error : 'No se encontró el corral solicitado')
-                router.push({ name: 'cattle-list' });
+                router.push({ name: 'corrals-list' });
                 return;
             }
             toast.error('Ha ocurrido un error al obtener el registro solicitado')
@@ -212,7 +212,7 @@ const useCorral = () => {
         }
     }
 
-    const updateCorral = async () => {
+    const updateCorral = async (corralId) => {
         const loader = $loading.show();
         try {
             if (!validateUpdateForm()) {
@@ -225,7 +225,7 @@ const useCorral = () => {
             corralModel.value = resp
 
             toast.success('Se ha actualizado el registro');
-            router.push({ name: 'corrals-list'});
+            router.replace({ name: 'corral-detail', params: { corralId } }); 
             return;
 
 

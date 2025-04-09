@@ -6,6 +6,7 @@ import ButtonDefault from '@/components/Buttons/ButtonDefault.vue';
 import BaseTableTanStack from '@/components/Tables/BaseTableTanStack.vue'
 
 import { createColumnHelper } from '@tanstack/vue-table';
+import { EyeIcon } from '@heroicons/vue/24/solid';
 import { onMounted, ref } from 'vue'
 import { useToast } from "vue-toastification";
 import { useRouter, useRoute, RouterLink } from 'vue-router';
@@ -185,6 +186,11 @@ onMounted(async () => {
             :nextPage = "corralCattleListNextPage"
             :previousPage = "corralCattleListPreviousPage"
           >
+          <template #actions="{ row }">
+            <div class="flex space-x-5 px-6 text-sm text-primary text-center">
+              <router-link :to="{ name: 'cattle-detail', params: { id: row.original.id } }"><span class="cursor-pointer" title:="Ver detalle"><EyeIcon class="size-5"/></span></router-link>
+            </div>
+          </template>
           </BaseTableTanStack>
         </div>
       </DefaultCard>

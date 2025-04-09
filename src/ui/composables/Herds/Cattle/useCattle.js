@@ -106,7 +106,7 @@ const useCattle = () => {
             cattleModel.value = resp
 
             toast.success('Se ha registrado exitosamente');
-            router.push({ name: 'cattle-detail', params: {id: cattleModel.value.id} });
+            router.replace({ name: 'cattle-detail', params: {id: cattleModel.value.id} });
             return;
 
         } catch (error) {
@@ -168,7 +168,7 @@ const useCattle = () => {
             cattleModel.value = resp
 
             toast.success('Se ha actualizado el registro');
-            router.push({ name: 'cattle-detail', params: {id: cattleModel.value.id} });
+            router.replace({ name: 'cattle-detail', params: {id: cattleModel.value.id} });
             return;
 
 

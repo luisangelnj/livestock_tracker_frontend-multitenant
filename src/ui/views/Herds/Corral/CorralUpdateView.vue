@@ -127,7 +127,7 @@ onMounted(async () => {
 
   <div class="flex w-full justify-center mt-8">
     <button
-      @click="updateCorral"
+      @click="updateCorral(corralModel.id)"
       class="flex w-full lg:w-1/3 justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90"
     >
       Actualizar
