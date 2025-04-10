@@ -78,24 +78,24 @@ onMounted(async () => {
 
 <template>
     <div class="flex items-start justify-between py-1">
+      <div class="flex justify-between items-center pb-2 space-x-5">
         <h2 class="text-title-md2 font-semibold text-black dark:text-white">
-            {{ pageTitle }}
+          {{ pageTitle }}
         </h2>
-        <InputGroup
-            v-model="corralPagination.searchQuery"
-            type="text"
-            placeholder="Buscar"
-            customClasses="w-1/2 md:w-1/3"
-            customInputClasses="border-gray-400/65"
-            @update:model-value="debounceSearchQuery"
-        />
-    </div>
-    <div class="flex justify-between items-center pb-2">
         <RouterLink class="flex justify-center items-center" :to="{name: 'corral-add'}">
             <ButtonDefault label="Añadir" customClasses="bg-primary/90 text-sm hover:opacity-95 text-white w-21 h-12 md:w-30 md:h-12 rounded-lg">
                 <span>🏠</span>
             </ButtonDefault>
         </RouterLink>
+      </div>
+      <InputGroup
+          v-model="corralPagination.searchQuery"
+          type="text"
+          placeholder="Buscar"
+          customClasses="w-1/2 md:w-1/3"
+          customInputClasses="border-gray-400/65"
+          @update:model-value="debounceSearchQuery"
+      />
     </div>
 
     <div class="overflow-auto w-full">

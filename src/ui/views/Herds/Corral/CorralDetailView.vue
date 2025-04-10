@@ -4,6 +4,7 @@ import DefaultCard from '@/components/Forms/DefaultCard.vue'
 import InputGroup from '@/components/Forms/InputGroup.vue'
 import ButtonDefault from '@/components/Buttons/ButtonDefault.vue';
 import BaseTableTanStack from '@/components/Tables/BaseTableTanStack.vue'
+import ProgressBarOne from '@/components/ProgressBar/ProgressBarOne.vue'
 
 import { createColumnHelper } from '@tanstack/vue-table';
 import { EyeIcon } from '@heroicons/vue/24/solid';
@@ -88,7 +89,7 @@ onMounted(async () => {
     await getCorralCattleList(false, corralModel.value.id)
   } catch (error) {
     toast.error('Ha ocurrido un error, intentalo en un momento')
-    // router.push({ name: 'corrals-list' });
+    router.push({ name: 'corrals-list' });
   } finally {
     loader.hide()
   }
@@ -98,15 +99,18 @@ onMounted(async () => {
 
 <template>
   <!-- Breadcrumb Start -->
-  <BreadcrumbDefault :pageTitle="pageTitle" />
+  <BreadcrumbDefault :pageTitle="pageTitle" >
+    <template #button>
+      <div class="flex justify-between items-center">
+        <RouterLink class="flex justify-center items-center" :to="{name:'corral-update', params: {id: corralModel.id}}">
+          <ButtonDefault label="Editar" customClasses="bg-primary/90 text-sm hover:opacity-95 text-white w-21 h-12 md:w-30 md:h-12 rounded-lg">
+            <span>✍️</span>
+          </ButtonDefault>
+        </RouterLink>
+      </div>
+    </template>
+  </BreadcrumbDefault>
   <!-- Breadcrumb End -->
-  <div class="flex justify-between items-center pb-2.5">
-    <RouterLink class="flex justify-center items-center" :to="{name:'corral-update', params: {id: corralModel.id}}">
-      <ButtonDefault label="Editar" customClasses="bg-primary/90 text-sm hover:opacity-95 text-white w-21 h-12 md:w-30 md:h-12 rounded-lg">
-        <span>✍️</span>
-      </ButtonDefault>
-    </RouterLink>
-  </div>
 
   <div class="grid grid-row-1 gap-1 sm:grid-cols-2">
     
@@ -160,14 +164,14 @@ onMounted(async () => {
               isDisabled
               customClasses="w-full"
             />
-            <InputGroup
-              v-if="corralModel.currentOccupancy > 0"
-              v-model="corralModel.currentOccupancy"
-              label="Ocupación actual del corral"
-              type="number"
-              isDisabled
-              customClasses="w-full"
-            />
+            <div class="">
+              <ProgressBarOne
+                label="Ocupación actual"
+                :value="corralModel.currentOccupancy" 
+                :max="corralModel.capacity"
+                error="Libre"
+              />
+            </div>
           </div>
 
       </DefaultCard>

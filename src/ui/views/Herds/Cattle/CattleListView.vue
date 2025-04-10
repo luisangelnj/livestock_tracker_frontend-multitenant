@@ -98,9 +98,16 @@ const debounceSearchQuery = _.debounce(searchCattle, 450);
 
 <template>
   <div class="flex items-start justify-between py-1">
-    <h2 class="text-title-md2 font-semibold text-black dark:text-white">
-      {{ pageTitle }}
-    </h2>
+    <div class="flex justify-between items-center pb-2 space-x-5">
+      <h2 class="text-title-md2 font-semibold text-black dark:text-white">
+        {{ pageTitle }}
+      </h2>
+      <RouterLink class="flex justify-center items-center" :to="{name:'cattle-add'}">
+        <ButtonDefault label="Añadir" customClasses="bg-primary/90 text-sm hover:opacity-95 text-white w-21 h-12 md:w-30 md:h-12 rounded-lg">
+          <span>🐄</span>
+        </ButtonDefault>
+      </RouterLink>
+    </div>
     <InputGroup
       v-model="searchQuery"
       type="text"
@@ -109,33 +116,6 @@ const debounceSearchQuery = _.debounce(searchCattle, 450);
       customInputClasses="border-gray-400/65"
       @update:model-value="debounceSearchQuery"
     />
-  </div>
-  <div class="flex justify-between items-center pb-2">
-    <RouterLink class="flex justify-center items-center" :to="{name:'cattle-add'}">
-      <ButtonDefault label="Añadir" customClasses="bg-primary/90 text-sm hover:opacity-95 text-white w-21 h-12 md:w-30 md:h-12 rounded-lg">
-        <span>🐄</span>
-      </ButtonDefault>
-    </RouterLink>
-    <!-- Controles de paginación -->
-    <div class="flex justify-end items-center space-x-2 select-none">
-      <button
-        @click="previousPage"
-        :disabled="page == 1 || searching"
-        class="px-4 py-2 bg-gray-200 rounded-lg enabled:hover:bg-gray-300 disabled:opacity-40"
-      >
-        &lt;
-      </button>
-      <span class="text-sm text-gray-700">
-        {{ page }} de {{ totalPages }}
-      </span>
-      <button
-        @click="nextPage"
-        :disabled="page >= totalPages || searching"
-        class="px-4 py-2 bg-gray-200 rounded-lg enabled:hover:bg-gray-300 disabled:opacity-40"
-      >
-        &gt;
-      </button>
-    </div>
   </div>
 
   <div class="overflow-auto w-full">

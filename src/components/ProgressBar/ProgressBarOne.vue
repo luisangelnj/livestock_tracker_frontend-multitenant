@@ -2,20 +2,29 @@
 import { computed } from 'vue';
 
 const props = defineProps({
+    label: String,
     value: Number,
-    max: Number,
+    max: {
+        type: Number,
+        default: null
+    },
     error: String,
 });
 
 const percentage = computed(() => {
-    if (!props.max || props.max === 0) return 0;
+    if (props.max === 0) return 0;
     return Math.min((props.value / props.max) * 100, 100); // nunca más del 100%
+});
+
+// Para mostrar texto en la vista (solo para mostrar)
+const displayMax = computed(() => {
+  return props.max === null ? 'Sin límite' : props.max;
 });
 
 const barColor = computed(() => {
   const pct = percentage.value;
-  if (pct < 70) return 'bg-green-500';
-  if (pct < 90) return 'bg-yellow-500';
+  if (pct > 0 && pct < 70) return 'bg-green-500';
+  if (pct > 0 && pct < 90) return 'bg-yellow-500';
   return 'bg-blue-600';
 });
 
@@ -23,7 +32,8 @@ const barColor = computed(() => {
 
 <template>
     <div v-if="props.value > 0" class="w-full text-xs italic">
-        <p class="w-full text-center">{{ props.value }} de {{ props.max }}</p>
+        <div v-if="props.label" class="mb-2.5 block not-italic text-sm font-medium text-black">{{ props.label }}</div>
+        <p class="w-full text-center">{{ props.value }} de {{ displayMax }}</p>
         <div class="w-full bg-gray-200 rounded-full dark:bg-gray-700">
             <div class="font-medium text-blue-100 text-center p-0.5 leading-none rounded-full" :class="barColor" :style="{ width: percentage + '%' }"></div>
         </div>

@@ -159,7 +159,7 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-  document.title = `${APP_NAME} ${to.meta.title} | ${SYSTEM_DEVELOPER}`
+  document.title = `${to.meta.title} | ${APP_NAME}`
 
   const authStore = useAuthStore();
   const loader = $loading.show();
