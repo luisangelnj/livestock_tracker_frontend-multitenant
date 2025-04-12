@@ -103,9 +103,7 @@ onMounted(async () => {
     <template #button>
       <div class="flex justify-between items-center">
         <RouterLink class="flex justify-center items-center" :to="{name:'corral-update', params: {id: corralModel.id}}">
-          <ButtonDefault label="Editar" customClasses="bg-primary/90 text-sm hover:opacity-95 text-white w-21 h-12 md:w-30 md:h-12 rounded-lg">
-            <span>✍️</span>
-          </ButtonDefault>
+            <span class="text-primary font-medium hover:underline group">Editar ✍️</span>
         </RouterLink>
       </div>
     </template>
@@ -168,7 +166,7 @@ onMounted(async () => {
               <ProgressBarOne
                 label="Ocupación actual"
                 :value="corralModel.currentOccupancy" 
-                :max="corralModel.capacity"
+                :max="corralModel.capacity ?? 'Sin límite'"
                 error="Libre"
               />
             </div>

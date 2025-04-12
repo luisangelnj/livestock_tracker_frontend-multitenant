@@ -5,7 +5,7 @@ const props = defineProps({
     label: String,
     value: Number,
     max: {
-        type: Number,
+        type: [Number, String],
         default: null
     },
     error: String,
@@ -22,10 +22,11 @@ const displayMax = computed(() => {
 });
 
 const barColor = computed(() => {
-  const pct = percentage.value;
-  if (pct > 0 && pct < 70) return 'bg-green-500';
-  if (pct > 0 && pct < 90) return 'bg-yellow-500';
-  return 'bg-blue-600';
+    const pct = percentage.value;
+    if (pct > 0 && pct < 70) return 'bg-green-500';
+    if (pct > 0 && pct < 90) return 'bg-yellow-500';
+    if (pct == 100) return 'bg-red'
+    return 'bg-blue-600';
 });
 
 </script>

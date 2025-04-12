@@ -112,9 +112,7 @@ onMounted(async () => {
     <template #button>
       <div class="flex justify-between items-center">
         <RouterLink class="flex justify-center items-center" :to="{name:'cattle-update', params: {id: cattleModel.id}}">
-          <ButtonDefault label="Editar" customClasses="bg-primary/90 text-sm hover:opacity-95 text-white w-21 h-12 md:w-30 md:h-12 rounded-lg">
-            <span>✍️</span>
-          </ButtonDefault>
+          <span class="text-primary font-medium hover:underline group">Editar ✍️</span>
         </RouterLink>
       </div>
     </template>
