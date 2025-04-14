@@ -31,20 +31,6 @@ const {
   addCorral
 } = useCorral();
 
-
-onMounted(async () => {
-  const loader = $loading.show()
-  try {
-    
-  } catch (error) {
-    toast.error('Ha ocurrido un error, intentalo en un momento')
-    // router.push({ name: 'corrals-list' });
-  } finally {
-    loader.hide()
-  }
-
-})
-
 </script>
 
 <template>

@@ -17,6 +17,7 @@ import CorralAddView from '@/ui/views/Herds/Corral/CorralAddView.vue'
 import CorralDetailView from '@/ui/views/Herds/Corral/CorralDetailView.vue'
 import CorralUpdateView from '@/ui/views/Herds/Corral/CorralUpdateView.vue'
 import WarehouseStockView from '@/ui/views/Warehouse/WarehouseStockView.vue'
+import WarehouseAddEntryView from '@/ui/views/Warehouse/WarehouseAddEntryView.vue'
 
 import ExampleView from '@/ui/views/ExampleView.vue'
 
@@ -136,6 +137,12 @@ const routes = [
         component: WarehouseStockView,
         meta: { title: 'Inventario de Almacén' }
       },
+      {
+        path: 'add-entry',
+        name: 'warehouse-add-entry',
+        component: WarehouseAddEntryView,
+        meta: { title: 'Añadir entrada de Almacén' }
+      }
     ]
   },
 
