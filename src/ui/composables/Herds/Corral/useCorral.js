@@ -23,7 +23,7 @@ const useCorral = () => {
         searching: false
     })
     const corralsList = ref([]);
-    const corralModel = ref([{
+    const corralModel = ref({
         id: null,
         name: '',
         location: '',
@@ -32,7 +32,7 @@ const useCorral = () => {
         description: '',
         status: '',
         createdAt: ''
-    }]);
+    });
     const corralCattlePagination = ref({
         page: 1,
         totalPages: '',

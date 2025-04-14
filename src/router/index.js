@@ -16,6 +16,7 @@ import CorralListView from '@/ui/views/Herds/Corral/CorralListView.vue'
 import CorralAddView from '@/ui/views/Herds/Corral/CorralAddView.vue'
 import CorralDetailView from '@/ui/views/Herds/Corral/CorralDetailView.vue'
 import CorralUpdateView from '@/ui/views/Herds/Corral/CorralUpdateView.vue'
+import WarehouseStockView from '@/ui/views/Warehouse/WarehouseStockView.vue'
 
 import ExampleView from '@/ui/views/ExampleView.vue'
 
@@ -53,14 +54,12 @@ const routes = [
   { path: '/dashboard', name: 'dashboard', component: DashboardView, meta: { title: 'Dashboard', requiresAuth: true } },
   
 
-  {
-    path: '/herd',
+  { path: '/herd',
     component: DefaultLayoutRouterView, // o uno llamado HerdLayout si quieres aislarlo
     meta: { requiresAuth: true },
     children: [
       // 🐄 CATTLE
-      {
-        path: 'cattle',
+      { path: 'cattle',
         children: [
           {
             path: '',
@@ -89,8 +88,7 @@ const routes = [
         ]
       },
           // 🐖 CORRALS
-      {
-        path: 'corrals',
+      { path: 'corrals',
         children: [
           {
             path: '',
@@ -125,6 +123,19 @@ const routes = [
         ]
       }
 
+    ]
+  },
+
+  { path: '/warehouse',
+    component: DefaultLayoutRouterView,
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: '',
+        name: 'warehouse-stock',
+        component: WarehouseStockView,
+        meta: { title: 'Inventario de Almacén' }
+      },
     ]
   },
 
