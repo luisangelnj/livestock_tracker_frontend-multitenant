@@ -202,7 +202,7 @@ const useCorral = () => {
             }
             if (error.code == 404) {
                 toast.warning(error?.error ? error.error : 'No se encontró el corral solicitado')
-                router.push({ name: 'cattle-list' });
+                router.push({ name: 'corrals-list' });
                 return;
             }
             toast.error('Ha ocurrido un error al obtener el registro solicitado')

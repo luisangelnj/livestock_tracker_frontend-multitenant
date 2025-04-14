@@ -5,7 +5,7 @@ export default {
     async getAllCorralsNoPag() {
         try {
 
-            const response = await axios.get('/corrals', {
+            const response = await axios.get('/corral', {
                 params: {
                     paginated: false,
                 }
@@ -41,7 +41,7 @@ export default {
     async getAllCorrals(page, perPage, searchQuery) { 
         try {
             
-            const response = await axios.get('/corrals', {
+            const response = await axios.get('/corral', {
                 params: {
                     page: page,       // Número de página
                     per_page: perPage, // Elementos por página
@@ -80,7 +80,7 @@ export default {
     async addCorral(corralModel) {
         try {
             
-            const response = await axios.post(`/corrals`, corralModel);
+            const response = await axios.post(`/corral`, corralModel);
 
             // Verifica si la respuesta es exitosa
             if (response.status === 201) {
@@ -109,7 +109,7 @@ export default {
     async updateCorral(corralModel) {
         try {
 
-            const response = await axios.put(`/corrals/${corralModel.id}`, corralModel);
+            const response = await axios.put(`/corral/${corralModel.id}`, corralModel);
 
             // Verifica si la respuesta es exitosa
             if (response.status === 200) {
@@ -138,7 +138,7 @@ export default {
     async getCorralDetail(corralId) {
         try {
             
-            const response = await axios.get(`/corrals/${corralId}`);
+            const response = await axios.get(`/corral/${corralId}`);
 
             // Verifica si la respuesta es exitosa
             if (response.status === 200) {
@@ -164,7 +164,7 @@ export default {
     async getCorralCattleList(corralId) {
         try {
             
-            const response = await axios.get(`/corrals/${corralId}/cattle-list`);
+            const response = await axios.get(`/corral/${corralId}/cattle-list`);
 
             // Verifica si la respuesta es exitosa
             if (response.status === 200) {
