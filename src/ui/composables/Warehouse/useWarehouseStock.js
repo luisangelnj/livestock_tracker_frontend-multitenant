@@ -33,10 +33,40 @@ const useWarehouseStock = () => {
     const errors = ref({})
 
 
+    // FUNCIONES
+    const getAllWarehouseStock = async (loading = true) => {
+        const loader = loading ? $loading.show() : null;
+        try {
+            
+            const resp = await WarehouseStock.getAllWarehouseStock(warehouseStockPagination.value.page, warehouseStockPagination.value.perPage, warehouseStockPagination.value.searchQuery);
+            if (resp.success == false) throw resp;
+
+            console.log(resp);
+
+            warehouseStockList.value = resp.values
+            warehouseStockPagination.value.totalPages = resp.totalPages
+
+            return resp
+
+        } catch (error) {
+            if (error.code == 401) {
+                toast.warning('Tu sesión caducó por seguridad, ingresa nuevamente.')
+                window.location.reload();
+                return;
+            }
+            toast.error('Ha ocurrido un error al cargar el listado de stock. Inténtalo de nuevo más tarde')
+            throw new Error('Error al obtener listado de stock: ' + error);
+        } finally {
+            loading ? loader.hide() : null
+        }
+    }
+
+
     return {
         warehouseStockList,
         warehouseStockPagination,
-        
+
+        getAllWarehouseStock
     }
 }
 

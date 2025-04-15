@@ -15,7 +15,8 @@ const pageTitle = ref('Inventario de Almacén')
 
 const {
   warehouseStockList,
-  warehouseStockPagination
+  warehouseStockPagination,
+  getAllWarehouseStock
 } = useWarehouseStock();
 
 // Helper para crear columnas
@@ -23,26 +24,26 @@ const columnHelper = createColumnHelper();
 
 // Definición de columnas
 const warehouseStockListColumns = [
-  columnHelper.accessor('name', {
+  columnHelper.accessor('foodType', {
     header: 'Nombre',
     width: 20
   }),
   columnHelper.accessor('quantity', {
-    header: 'Cantidad',
+    header: 'Cantidad (Unidades)',
     width: 20
   }),
   columnHelper.accessor('estimatedUnitPrice', {
     header: 'Precio estimado por unidad',
     width: 20
   }),
-  columnHelper.accessor('estimatedValue', {
+  columnHelper.accessor('estimatedStockValue', {
     header: 'Valor estimado',
     width: 20
   })
 ];
 
 onMounted(async () => {
-
+  await getAllWarehouseStock()
 })
 
 </script>

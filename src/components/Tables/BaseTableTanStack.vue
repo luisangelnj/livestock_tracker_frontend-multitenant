@@ -101,7 +101,7 @@ const handlePreviousPage = () => {
 					<td class="px-6 py-3 text-sm text-primary text-center">
                         <slot name="actions" :row="row">
                             <router-link to="#">
-                                <span class="cursor-pointer" title="Ver detalle">Editar</span>
+                                <span class="cursor-pointer">#</span>
                             </router-link>
                         </slot>
 					</td>
