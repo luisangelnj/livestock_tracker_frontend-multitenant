@@ -109,7 +109,7 @@ const handlePreviousPage = () => {
             </tbody>
         </table>
         <!-- Controles de paginación -->
-        <div class="flex justify-end items-center mt-4 space-x-2 select-none">
+        <div v-if="page && totalPages" class="flex justify-end items-center mt-4 space-x-2 select-none">
 			<button
 				@click="handlePreviousPage"
 				:disabled="props.page == 1 || props.searching"
