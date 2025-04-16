@@ -30,13 +30,25 @@ const {
 const handleRegisterWeight = async () => {
     const success = await registerWeight(props.cattleId)
     if (success) {
-        weightModel.value = []
+        weightModel.value = {
+            id: null,
+            cattleId: '',
+            registerDate: new Date().toLocaleDateString('es-MX'),
+            weight: '',
+            createdAt: ''
+        }
         emit('weight-registered')
     }
 }
 
 const handleCloseModal = () => {
-    weightModel.value = []
+    weightModel.value = {
+        id: null,
+        cattleId: '',
+        registerDate: new Date().toLocaleDateString('es-MX'),
+        weight: '',
+        createdAt: ''
+    }
     errors.value = []
     emit('closed')
 }
