@@ -30,41 +30,44 @@ const $loading = useLoading({
 const columnHelper = createColumnHelper();
 // Definición de columnas
 const warehouseMovementDetailsColumns = [
-  columnHelper.accessor('name', {
+  columnHelper.accessor('foodType', {
     header: 'Alimento',
     width: 20
   }),
-  columnHelper.accessor('currentOccupancy', {
+  columnHelper.accessor('description', {
     header: 'Descripción o factura',
     width: 20
   }),
-  columnHelper.accessor('location', {
-    header: 'Precio por unidad',
+  columnHelper.accessor('unitPrice', {
+    header: 'Precio por unidad ($)',
     width: 20
   }),
-  columnHelper.accessor('status', {
-    header: 'Unidades ingresadas',
+  columnHelper.accessor('quantity', {
+    header: 'Unidades ingresadas (Kg)',
     width: 20
   })
 ];
 
 const {
-  warehouseMovementModel
+  warehouseMovementModel,
+  newMovementDetail,
+  addMovementDetail,
+  removeMovementDetail,
+  errors
 } = useWarehouseMovement();
 
 
-onMounted(async () => {
-  const loader = $loading.show()
-  try {
+// onMounted(async () => {
+//   const loader = $loading.show()
+//   try {
     
-  } catch (error) {
-    toast.error('Ha ocurrido un error, intentalo en un momento')
-    // router.push({ name: '' });
-  } finally {
-    loader.hide()
-  }
-
-})
+//   } catch (error) {
+//     toast.error('Ha ocurrido un error, intentalo en un momento')
+//     // router.push({ name: '' });
+//   } finally {
+//     loader.hide()
+//   }
+// })
 
 </script>
 
@@ -73,7 +76,7 @@ onMounted(async () => {
   <BreadcrumbDefault :pageTitle="pageTitle" />
   <!-- Breadcrumb End -->
 
-  <DefaultCard>
+  <DefaultCard class="mb-2">
     <div class="grid grid-cols-2 gap-10 p-6.5">
       <DatePickerOne
         v-model="warehouseMovementModel.registerDate"
@@ -92,13 +95,16 @@ onMounted(async () => {
   <DefaultCard>
     <div class="grid grid-cols-2 gap-5 p-6.5">
       <InputGroup
+        v-model="newMovementDetail.foodType"
         label="Seleccionar alimento"
         placeholder="Selecciona o registra un nuevo alimento"
         type="text"
         customClasses="w-full"
         isRequired
+        :errorText="errors.foodType"
       />
       <InputGroup
+        v-model="newMovementDetail.description"
         label="Nota o Factura del alimento"
         placeholder="Ingresa la nota o factura del alimento a ingresar"
         type="text"
@@ -106,38 +112,47 @@ onMounted(async () => {
       />
       <div class="grid grid-cols-2 gap-5">
         <InputGroup
-          label="Precio por unidad"
+          v-model="newMovementDetail.unitPrice"
+          label="Precio por unidad ($)"
           placeholder="0"
-          type="text"
+          type="number"
           customClasses="w-full"
+          isRequired
+          :errorText="errors.unitPrice"
         />
         <InputGroup
-          label="Unidades a ingresar"
+          v-model="newMovementDetail.quantity"
+          label="Unidades a ingresar (Kg)"
           placeholder="0"
-          type="text"
+          type="number"
           customClasses="w-full"
+          isRequired
+          :errorText="errors.quantity"
         />
       </div>
       <div class="flex items-end">
-        <ButtonDefault label="Agregar" customClasses="bg-primary/90 text-sm hover:opacity-95 hover:cursor-pointer text-white w-20 h-12 rounded-lg" />
+        <ButtonDefault label="Agregar" @click="addMovementDetail" customClasses="bg-primary/90 text-sm hover:opacity-95 hover:cursor-pointer text-white w-20 h-12 rounded-lg" />
       </div>
     </div>
   </DefaultCard>
-
   <div class="overflow-auto w-full">
     <BaseTableTanStack
       :columns = "warehouseMovementDetailsColumns"
       :withHeader = true
       :data = "warehouseMovementModel.movementDetails"
     >
-
+      <template #actions="{row}">
+        <div class="flex space-x-5 px-6 text-sm text-primary text-center">
+          <span @click="removeMovementDetail(row.index)" class="text-primary hover:cursor-pointer hover:underline">Eliminar</span>
+        </div>
+      </template>
     </BaseTableTanStack>
   </div>
 
-  <div class="flex w-full justify-center mt-8">
+  <div class="flex w-full justify-center my-3">
     <button
       @click="addEntry"
-      class="flex w-full lg:w-1/3 justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90"
+      class="flex w-full sm:w-1/3 lg:w-1/4 justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90"
     >
       Registrar
     </button>

@@ -52,7 +52,7 @@ const handleChangeEvent = (e) => {
       <span v-if="isRequired" class="text-meta-1">*</span>
     </label>
 
-    <div :class="{'active:border-stroke focus:border-stroke bg-gray-100 rounded-md cursor-default hover:cursor-not-allowed':isDisabled}" class="relative z-20 bg-transparent">
+    <div :class="{'active:border-stroke focus:border-stroke !bg-gray-50 rounded-md cursor-default hover:cursor-not-allowed':isDisabled}" class="relative z-20 bg-transparent">
       <select
         v-model="selectedOption"
         :class="{ 'text-black': isOptionSelected, 'focus:border-gray-2 active:border-gray-200 hover:cursor-not-allowed': isDisabled }"

@@ -7,21 +7,22 @@ import { watch, computed, ref } from "vue";
 const props = defineProps({
     data: Array, // Lista de datos a mostrar
     columns: Array, // Asegura que siempre sea un array
-    withHeader: {type:Boolean, default:true},
+    withHeader: { type: Boolean, default: true },
+    manualPagination: { type: Boolean, default: true },
     page: Number, // Página actual
     totalPages: [Number, String], // <-- Acepta número o string vacío
     nextPage: Function, // Función para avanzar de página
     previousPage: Function, // Función para retroceder de página
-    searching: {type:Boolean, default: false}
+    searching: { type: Boolean, default: false },
 })
 
 // Configuración de la tabla
 const table = useVueTable({
-  data: props.data,
-  columns: props.columns,
-  getCoreRowModel: getCoreRowModel(), // Añade el modelo de filas básico
-  manualPagination: true,
-  pageCount: props.totalPages
+    data: props.data,
+    columns: props.columns,
+    getCoreRowModel: getCoreRowModel(), // Añade el modelo de filas básico
+    manualPagination: props.manualPagination,
+    pageCount: props.totalPages,
 })
 
 watch(() => props.data, (newData) => {
@@ -109,7 +110,7 @@ const handlePreviousPage = () => {
             </tbody>
         </table>
         <!-- Controles de paginación -->
-        <div v-if="page && totalPages" class="flex justify-end items-center mt-4 space-x-2 select-none">
+        <div v-if="page && totalPages && manualPagination" class="flex justify-end items-center mt-4 space-x-2 select-none">
 			<button
 				@click="handlePreviousPage"
 				:disabled="props.page == 1 || props.searching"

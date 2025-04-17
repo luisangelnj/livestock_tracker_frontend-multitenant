@@ -19,9 +19,16 @@ const {
   getAllWarehouseStock
 } = useWarehouseStock();
 
+const searchStock = async () => {
+  warehouseStockPagination.value.searching = true
+  warehouseStockPagination.value.page = 1;
+  await getAllWarehouseStock(false)
+  warehouseStockPagination.value.searching = false
+}
+const debouncedSearchStock = _.debounce(searchStock, 500)
+
 // Helper para crear columnas
 const columnHelper = createColumnHelper();
-
 // Definición de columnas
 const warehouseStockListColumns = [
   columnHelper.accessor('foodType', {
@@ -66,7 +73,7 @@ onMounted(async () => {
           placeholder="Buscar"
           customClasses="w-1/2 md:w-1/3"
           customInputClasses="border-gray-400/65"
-          @update:model-value="debounceSearchQuery"
+          @update:model-value="debouncedSearchStock"
       />
     </div>
 
