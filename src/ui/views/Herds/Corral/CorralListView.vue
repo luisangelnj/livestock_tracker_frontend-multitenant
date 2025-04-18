@@ -41,7 +41,7 @@ const searchCorrals = async () => {
   await getAllCorrals(false);
   corralPagination.value.searching = false;
 }
-const debounceSearchQuery = _.debounce(searchCorrals, 450);
+const debouncedSearchCorral = _.debounce(searchCorrals, 500);
 
 
 // Helper para crear columnas
@@ -70,7 +70,7 @@ const corralsListColumns = [
 
 onMounted(async () => {
   corralPagination.value.searching = true;
-  await getAllCorrals(true);
+  await getAllCorrals(false);
   corralPagination.value.searching = false;
 })
 
@@ -94,7 +94,7 @@ onMounted(async () => {
           placeholder="Buscar"
           customClasses="w-1/2 md:w-1/3"
           customInputClasses="border-gray-400/65"
-          @update:model-value="debounceSearchQuery"
+          @update:model-value="debouncedSearchCorral"
       />
     </div>
 
@@ -102,6 +102,7 @@ onMounted(async () => {
         <BaseTableTanStack
             :columns = "corralsListColumns"
             :withHeader = true
+            :withRowNumbers = true
             :data = "corralsList"
             :page = "corralPagination.page"
             :totalPages = "corralPagination.totalPages"

@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 const props = defineProps({
     label: String,
-    value: Number,
+    value: [Number, String],
     max: {
         type: [Number, String],
         default: null

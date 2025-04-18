@@ -21,13 +21,13 @@ const useCattleWeight = () => {
     const isRegisterWeightModalOpen = ref(false)
 
     const weightList = ref([]);
-    const weightModel = ref([{
+    const weightModel = ref({
         id: null,
         cattleId: '',
-        registerDate: '',
+        registerDate: new Date().toLocaleDateString('es-MX'),
         weight: '',
         createdAt: ''
-    }]);
+    });
     const errors = ref({});
 
 

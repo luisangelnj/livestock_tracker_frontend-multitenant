@@ -23,7 +23,7 @@ const useCorral = () => {
         searching: false
     })
     const corralsList = ref([]);
-    const corralModel = ref([{
+    const corralModel = ref({
         id: null,
         name: '',
         location: '',
@@ -32,7 +32,7 @@ const useCorral = () => {
         description: '',
         status: '',
         createdAt: ''
-    }]);
+    });
     const corralCattlePagination = ref({
         page: 1,
         totalPages: '',
@@ -202,7 +202,7 @@ const useCorral = () => {
             }
             if (error.code == 404) {
                 toast.warning(error?.error ? error.error : 'No se encontró el corral solicitado')
-                router.push({ name: 'cattle-list' });
+                router.push({ name: 'corrals-list' });
                 return;
             }
             toast.error('Ha ocurrido un error al obtener el registro solicitado')

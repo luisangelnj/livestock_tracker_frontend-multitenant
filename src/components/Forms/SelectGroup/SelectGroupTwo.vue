@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { defineEmits, ref, watch, defineComponent } from 'vue';
 const props = defineProps({
   label: String,
@@ -14,6 +14,8 @@ const props = defineProps({
 });
 
 const localInputValue = ref(props.modelValue)
+const selectedOption = ref('')
+const isOptionSelected = ref(false)
 
 // Watch for changes to modelValue prop
 watch(() => props.modelValue, (newValue) => {
@@ -32,8 +34,6 @@ const updateValue = (event) => {
   emit('update:modelValue', event.target.value);
 };
 
-const selectedOption = ref<string>('')
-const isOptionSelected = ref<boolean>(false)
 
 const changeTextColor = () => {
   isOptionSelected.value = true
@@ -52,12 +52,13 @@ const handleChangeEvent = (e) => {
       <span v-if="isRequired" class="text-meta-1">*</span>
     </label>
 
-    <div class="relative z-20 bg-transparent dark:bg-form-input">
+    <div :class="{'active:border-stroke focus:border-stroke !bg-gray-50 rounded-md cursor-default hover:cursor-not-allowed':isDisabled}" class="relative z-20 bg-transparent">
       <select
         v-model="selectedOption"
-        class="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-        :class="{ 'text-black dark:text-white': isOptionSelected }"
+        :class="{ 'text-black': isOptionSelected, 'focus:border-gray-2 active:border-gray-200 hover:cursor-not-allowed': isDisabled }"
+        class="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary"
         @change="handleChangeEvent"
+        :disabled="isDisabled"
       >
         <option :value="''">{{ placeholder }}</option>
         <option v-for="option in options" :key="option.id" :value="option.id">{{option.name}}</option>
