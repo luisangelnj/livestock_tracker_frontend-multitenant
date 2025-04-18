@@ -50,7 +50,9 @@ const warehouseStockListColumns = [
 ];
 
 onMounted(async () => {
-  await getAllWarehouseStock()
+  warehouseStockPagination.value.searching = true
+  await getAllWarehouseStock(false)
+  warehouseStockPagination.value.searching = false
 })
 
 </script>

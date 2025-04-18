@@ -48,7 +48,7 @@ const handlePreviousPage = () => {
         <table class="min-w-full bg-white shadow-sm rounded-t-lg">
             <thead v-if="props.withHeader" class="bg-primary/35">
                 <tr class="rounded-lg divide-x-2 divide-primary/10">
-                    <th v-if="props.withRowNumbers" class="px-6 py-4 text-start text-xs font-bold text-primary uppercase tracking-wider w-[5%] last:rounded-tr-lg">
+                    <th v-if="props.withRowNumbers" class="px-6 py-4 text-start text-xs font-bold text-primary uppercase tracking-wider w-[5%] first:rounded-tl-lg last:rounded-tr-lg">
                         #
                     </th>
                     <!-- Encabezados de la tabla -->

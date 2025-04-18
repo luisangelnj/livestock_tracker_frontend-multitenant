@@ -70,7 +70,7 @@ const corralsListColumns = [
 
 onMounted(async () => {
   corralPagination.value.searching = true;
-  await getAllCorrals(true);
+  await getAllCorrals(false);
   corralPagination.value.searching = false;
 })
 
