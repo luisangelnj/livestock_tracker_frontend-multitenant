@@ -58,7 +58,7 @@ const useFoodType = () => {
 
 
     return {
-
+        getAllFoodTypesNoPag
     }
 }
 

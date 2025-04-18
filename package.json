@@ -22,6 +22,7 @@
     "jsvectormap": "^1.5.3",
     "lodash": "^4.17.21",
     "pinia": "^2.1.7",
+    "tom-select": "^2.4.3",
     "vue": "^3.3.11",
     "vue-final-modal": "^4.5.5",
     "vue-loading-overlay": "^6.0.6",

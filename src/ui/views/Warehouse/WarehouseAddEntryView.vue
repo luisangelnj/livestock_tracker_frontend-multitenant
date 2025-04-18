@@ -15,6 +15,7 @@ import { useRouter } from 'vue-router';
 import { useLoading } from 'vue-loading-overlay'
 
 import useWarehouseMovement from "@/ui/composables/Warehouse/useWarehouseMovement.js";
+import useFoodType from '@/ui/composables/Catalogs/useFoodType.js'
 
 const pageTitle = ref('Registrando entrada de almacén')
 
@@ -56,18 +57,21 @@ const {
   errors
 } = useWarehouseMovement();
 
+const {
+  getAllFoodTypesNoPag
+} = useFoodType();
 
-// onMounted(async () => {
-//   const loader = $loading.show()
-//   try {
-    
-//   } catch (error) {
-//     toast.error('Ha ocurrido un error, intentalo en un momento')
-//     // router.push({ name: '' });
-//   } finally {
-//     loader.hide()
-//   }
-// })
+onMounted(async () => {
+  const loader = $loading.show()
+  try {
+    await getAllFoodTypesNoPag(false);
+  } catch (error) {
+    toast.error('Ha ocurrido un error, intentalo en un momento')
+    // router.push({ name: '' });
+  } finally {
+    loader.hide()
+  }
+})
 
 </script>
 
@@ -138,13 +142,16 @@ const {
   <div class="overflow-auto w-full">
     <BaseTableTanStack
       :columns = "warehouseMovementDetailsColumns"
-      :withHeader = true
       :data = "warehouseMovementModel.movementDetails"
+      :withRowNumbers = true
     >
       <template #actions="{row}">
         <div class="flex space-x-5 px-6 text-sm text-primary text-center">
           <span @click="removeMovementDetail(row.index)" class="text-primary hover:cursor-pointer hover:underline">Eliminar</span>
         </div>
+      </template>
+      <template #cell-description="{row}">
+        <span v-if="!row.original.description">-</span>
       </template>
     </BaseTableTanStack>
   </div>
