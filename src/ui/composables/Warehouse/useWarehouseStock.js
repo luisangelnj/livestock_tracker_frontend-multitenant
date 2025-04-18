@@ -41,8 +41,6 @@ const useWarehouseStock = () => {
             const resp = await WarehouseStock.getAllWarehouseStock(warehouseStockPagination.value.page, warehouseStockPagination.value.perPage, warehouseStockPagination.value.searchQuery);
             if (resp.success == false) throw resp;
 
-            console.log(resp);
-
             warehouseStockList.value = resp.values
             warehouseStockPagination.value.totalPages = resp.totalPages
 

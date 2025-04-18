@@ -8,6 +8,8 @@ const props = defineProps({
     data: Array, // Lista de datos a mostrar
     columns: Array, // Asegura que siempre sea un array
     withHeader: { type: Boolean, default: true },
+    withActions: { type: Boolean, default: true },
+    withRowNumbers: { type: Boolean, default: false },
     manualPagination: { type: Boolean, default: true },
     page: Number, // Página actual
     totalPages: [Number, String], // <-- Acepta número o string vacío
@@ -46,6 +48,9 @@ const handlePreviousPage = () => {
         <table class="min-w-full bg-white shadow-sm rounded-t-lg">
             <thead v-if="props.withHeader" class="bg-primary/35">
                 <tr class="rounded-lg divide-x-2 divide-primary/10">
+                    <th v-if="props.withRowNumbers" class="px-6 py-4 text-start text-xs font-bold text-primary uppercase tracking-wider w-[5%] last:rounded-tr-lg">
+                        #
+                    </th>
                     <!-- Encabezados de la tabla -->
                     <th
                         v-for="header in table.getFlatHeaders()"
@@ -55,7 +60,7 @@ const handlePreviousPage = () => {
                     >
                         {{ header.column.columnDef.header }}
                     </th>
-                    <th class="px-6 py-4 text-start text-xs font-bold text-primary uppercase tracking-wider w-[10%] last:rounded-tr-lg">
+                    <th v-if="props.withActions" class="px-6 py-4 text-start text-xs font-bold text-primary uppercase tracking-wider w-[5%] last:rounded-tr-lg">
                         Acción
                     </th>
                 </tr>
@@ -85,6 +90,11 @@ const handlePreviousPage = () => {
                     :key="row.id"
                     class="hover:bg-gray-50 transition-colors divide-x-2 divide-gray-2 hover:divide-gray-100"
 				>
+                    <td v-if="props.withRowNumbers" class="px-6 py-3 text-sm text-gray-700">
+                        <slot name="rowNumbers" :row="row">
+                            <span>{{ row.index + 1 }}</span>
+                        </slot>
+                    </td>
                     <!-- Celdas de la tabla -->
                     <td
                         v-for="cell in row.getVisibleCells()"
@@ -99,7 +109,7 @@ const handlePreviousPage = () => {
                             {{ cell.getValue() }}
                         </slot>
                     </td>
-					<td class="px-6 py-3 text-sm text-primary text-center">
+					<td v-if="props.withActions" class="px-6 py-3 text-sm text-primary text-center">
                         <slot name="actions" :row="row">
                             <router-link to="#">
                                 <span class="cursor-pointer">#</span>

@@ -102,6 +102,7 @@ onMounted(async () => {
         <BaseTableTanStack
             :columns = "corralsListColumns"
             :withHeader = true
+            :withRowNumbers = true
             :data = "corralsList"
             :page = "corralPagination.page"
             :totalPages = "corralPagination.totalPages"

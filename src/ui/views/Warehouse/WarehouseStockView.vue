@@ -81,12 +81,12 @@ onMounted(async () => {
       <BaseTableTanStack
             :columns = "warehouseStockListColumns"
             :withHeader = true
+            :withActions = false
+            :withRowNumbers= true
             :data = "warehouseStockList"
             :page = "warehouseStockPagination.page"
             :totalPages = "warehouseStockPagination.totalPages"
             :searching = "warehouseStockPagination.searching"
-            :nextPage = "nextPage"
-            :previousPage = "previousPage"
       >
       
       </BaseTableTanStack>
