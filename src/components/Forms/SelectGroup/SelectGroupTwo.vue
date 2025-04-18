@@ -60,7 +60,7 @@ const handleChangeEvent = (e) => {
         @change="handleChangeEvent"
         :disabled="isDisabled"
       >
-        <option :value="''">{{ placeholder }}</option>
+        <option :value="''" :disabled="isRequired">{{ placeholder }}</option>
         <option v-for="option in options" :key="option.id" :value="option.id">{{option.name}}</option>
       </select>
 
