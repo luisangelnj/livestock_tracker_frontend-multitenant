@@ -104,16 +104,20 @@ onMounted(async () => {
   </DefaultCard>
   <DefaultCard>
     <div class="grid grid-cols-2 gap-5 p-6.5">
-      <TomSelect 
-        v-model="newMovementDetail.foodTypeId"
-        @selectedTomSelectOption="handleSelectedTomSelectOption"
-        label="Alimento a ingresar"
-        placeholder="Selecciona un alimento"
-        :options="foodTypeList"
-        customClasses="w-full"
-        isRequired
-        :errorText="errors.foodType"
-      />
+      <div class="flex items-end space-x-1 w-full">
+        <TomSelect 
+          v-model="newMovementDetail.foodTypeId"
+          @selectedTomSelectOption="handleSelectedTomSelectOption"
+          label="Alimento a ingresar"
+          placeholder="Busca un alimento"
+          :options="foodTypeList"
+          customClasses="w-11/12"
+          isRequired
+          :errorText="errors.foodType"
+        />
+        <!-- <ButtonDefault label="+" @click="addMovementDetail" customClasses="bg-primary/90 text-sm hover:opacity-95 hover:cursor-pointer text-white w-1/12 rounded-lg" /> -->
+        <button title="Crear nuevo alimento" class="w-1/12 bg-primary/90 size-12 rounded-lg font-semibold text-white text-xl hover:opacity-95 hover:cursor-pointer">+</button>
+      </div>
       <InputGroup
         v-model="newMovementDetail.description"
         label="Nota o Factura del alimento"

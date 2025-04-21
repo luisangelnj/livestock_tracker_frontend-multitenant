@@ -36,7 +36,7 @@ const useWarehouseMovement = () => {
     // VALIDACIONES
     const validateAddMovementDetail = () => {
         const newErrors = {};
-        if (!newMovementDetail.value.foodType) {
+        if (!newMovementDetail.value.foodTypeId || !newMovementDetail.value.foodType) {
             newErrors.foodType = 'Selecciona un alimento'
         }
         if (!newMovementDetail.value.quantity) {

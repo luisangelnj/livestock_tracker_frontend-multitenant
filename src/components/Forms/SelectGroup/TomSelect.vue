@@ -41,9 +41,12 @@ const props = defineProps({
   isDisabled: Boolean,
 });
 
+const generateUniqueId = () => 'tmp-' + Math.random().toString(36).substr(2, 9);
+
 const emit = defineEmits([
   'update:modelValue',
-  'selectedTomSelectOption'
+  'selectedTomSelectOption',
+  'newOption'
 ]);
 
 const selectedOption = ref('')
@@ -58,24 +61,35 @@ const initTomSelect = () => {
   }
 
   tomSelectInstance = new TomSelect(select.value, {
-    create: true,
     persist: false,
+    createOnBlur: false,
     onInitialize: () => {
       // Sincronizar con el valor inicial
       if (props.modelValue) {
         tomSelectInstance.setValue(props.modelValue);
       }
     },
+    create: false,
+    onItemAdd: function(input) {
+      // Personaliza cómo se crean nuevos items
+      return {
+        id: generateUniqueId(), // Función que debes implementar
+        name: input,
+        isNew: true // Bandera para identificar items nuevos
+      }
+    },
     onChange: (value) => {
-      emit('update:modelValue', value);
-      // Buscar el option seleccionado completo
-      const selected = props.options.find(option => option.id == value);
 
-      emit('selectedTomSelectOption', {
-        id: selected?.id,
-        name: selected?.name
-        // Puedes incluir más propiedades si es necesario
-      });
+      const selected = props.options.find(opt => opt.id == value) || 
+                    tomSelectInstance.options[value]; // Para items nuevos
+    
+      emit('update:modelValue', value);
+      emit('selectedTomSelectOption', selected);
+      
+      // Emitir evento especial para nuevos items
+      if (selected && selected.isNew) {
+        emit('newOption', { name: selected.name });
+      }
       
     }
   });
