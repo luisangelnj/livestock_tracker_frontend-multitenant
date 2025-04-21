@@ -2,6 +2,7 @@
 import BreadcrumbDefault from '@/components/Breadcrumbs/BreadcrumbDefault.vue'
 import DefaultCard from '@/components/Forms/DefaultCard.vue'
 import InputGroup from '@/components/Forms/InputGroup.vue'
+import TomSelect from '@/components/Forms/SelectGroup/TomSelect.vue'
 import SelectGroupTwo from '@/components/Forms/SelectGroup/SelectGroupTwo.vue'
 import DatePickerOne from '@/components/Forms/DatePicker/DatePickerOne.vue'
 import ButtonDefault from '@/components/Buttons/ButtonDefault.vue';
@@ -58,8 +59,13 @@ const {
 } = useWarehouseMovement();
 
 const {
+  foodTypeList,
   getAllFoodTypesNoPag
 } = useFoodType();
+
+const handleSelectedTomSelectOption = (option) => {
+  newMovementDetail.value.foodType = option.name
+}
 
 onMounted(async () => {
   const loader = $loading.show()
@@ -98,11 +104,12 @@ onMounted(async () => {
   </DefaultCard>
   <DefaultCard>
     <div class="grid grid-cols-2 gap-5 p-6.5">
-      <InputGroup
-        v-model="newMovementDetail.foodType"
-        label="Seleccionar alimento"
-        placeholder="Selecciona o registra un nuevo alimento"
-        type="text"
+      <TomSelect 
+        v-model="newMovementDetail.foodTypeId"
+        @selectedTomSelectOption="handleSelectedTomSelectOption"
+        label="Alimento a ingresar"
+        placeholder="Selecciona un alimento"
+        :options="foodTypeList"
         customClasses="w-full"
         isRequired
         :errorText="errors.foodType"
