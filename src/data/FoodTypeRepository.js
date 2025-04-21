@@ -5,7 +5,7 @@ export default {
     async getAllFoodTypesNoPag() {
         try {
 
-            const response = await axios.get('/catalogs/food-types', {
+            const response = await axios.get('/catalogs/food-type', {
                 params: {
                     paginated: false,
                 }

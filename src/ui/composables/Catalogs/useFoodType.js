@@ -38,7 +38,7 @@ const useFoodType = () => {
             
             const resp = await FoodType.getAllFoodTypesNoPag()
             if (resp.success == false) throw resp;
-
+            
             foodTypeList.value = resp
             
             return resp
@@ -58,7 +58,8 @@ const useFoodType = () => {
 
 
     return {
-
+        foodTypeList,
+        getAllFoodTypesNoPag
     }
 }
 
