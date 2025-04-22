@@ -52,10 +52,11 @@ const warehouseMovementDetailsColumns = [
 
 const {
   warehouseMovementModel,
-  newMovementDetail,
+  newMovementDetailModel,
   addMovementDetail,
   removeMovementDetail,
-  errors
+  errors,
+  registerWarehouseEntryMovement
 } = useWarehouseMovement();
 
 const {
@@ -63,8 +64,8 @@ const {
   getAllFoodTypesNoPag
 } = useFoodType();
 
-const handleSelectedTomSelectOption = (option) => {
-  newMovementDetail.value.foodType = option.name
+const handleSelectedTomSelectOption = (option) => {  
+  newMovementDetailModel.value.foodType = option?.name
 }
 
 onMounted(async () => {
@@ -73,7 +74,7 @@ onMounted(async () => {
     await getAllFoodTypesNoPag(false);
   } catch (error) {
     toast.error('Ha ocurrido un error, intentalo en un momento')
-    // router.push({ name: '' });
+    router.push({ name: 'warehouse-stock' });
   } finally {
     loader.hide()
   }
@@ -106,20 +107,25 @@ onMounted(async () => {
     <div class="grid grid-cols-2 gap-5 p-6.5">
       <div class="flex items-end space-x-1 w-full">
         <TomSelect 
-          v-model="newMovementDetail.foodTypeId"
+          v-model="newMovementDetailModel.foodTypeId"
           @selectedTomSelectOption="handleSelectedTomSelectOption"
           label="Alimento a ingresar"
           placeholder="Busca un alimento"
           :options="foodTypeList"
-          customClasses="w-11/12"
+          customClasses="w-10/12 lg:w-11/12"
           isRequired
           :errorText="errors.foodType"
         />
         <!-- <ButtonDefault label="+" @click="addMovementDetail" customClasses="bg-primary/90 text-sm hover:opacity-95 hover:cursor-pointer text-white w-1/12 rounded-lg" /> -->
-        <button title="Crear nuevo alimento" class="w-1/12 bg-primary/90 size-12 rounded-lg font-semibold text-white text-xl hover:opacity-95 hover:cursor-pointer">+</button>
+        <button 
+          title="Crear nuevo alimento" 
+          class="w-2/12 lg:w-1/12 bg-primary/90 size-12 rounded-lg font-semibold text-white text-xl hover:opacity-95 hover:cursor-not-allowed"
+          :class="{'mb-5.5':errors.foodType}"
+          disabled
+        >+</button>
       </div>
       <InputGroup
-        v-model="newMovementDetail.description"
+        v-model="newMovementDetailModel.description"
         label="Nota o Factura del alimento"
         placeholder="Ingresa la nota o factura del alimento a ingresar"
         type="text"
@@ -127,7 +133,7 @@ onMounted(async () => {
       />
       <div class="grid grid-cols-2 gap-5">
         <InputGroup
-          v-model="newMovementDetail.unitPrice"
+          v-model="newMovementDetailModel.unitPrice"
           label="Precio por unidad ($)"
           placeholder="0"
           type="number"
@@ -136,7 +142,7 @@ onMounted(async () => {
           :errorText="errors.unitPrice"
         />
         <InputGroup
-          v-model="newMovementDetail.quantity"
+          v-model="newMovementDetailModel.quantity"
           label="Unidades a ingresar (Kg)"
           placeholder="0"
           type="number"
@@ -145,34 +151,36 @@ onMounted(async () => {
           :errorText="errors.quantity"
         />
       </div>
-      <div class="flex items-end">
+      <div class="flex items-center">
         <ButtonDefault label="Agregar" @click="addMovementDetail" customClasses="bg-primary/90 text-sm hover:opacity-95 hover:cursor-pointer text-white w-20 h-12 rounded-lg" />
       </div>
     </div>
   </DefaultCard>
   <div class="overflow-auto w-full">
-    <BaseTableTanStack
-      :columns = "warehouseMovementDetailsColumns"
-      :data = "warehouseMovementModel.movementDetails"
-      :withRowNumbers = true
-    >
-      <template #actions="{row}">
-        <div class="flex space-x-5 px-6 text-sm text-primary text-center">
-          <span @click="removeMovementDetail(row.index)" class="text-primary hover:cursor-pointer hover:underline">Eliminar</span>
-        </div>
-      </template>
-      <template #cell-description="{row}">
-        <span v-if="!row.original.description">-</span>
-      </template>
-    </BaseTableTanStack>
+    <DefaultCard>
+      <BaseTableTanStack
+        :columns = "warehouseMovementDetailsColumns"
+        :data = "warehouseMovementModel.movementDetails"
+        :withRowNumbers = true
+      >
+        <template #actions="{row}">
+          <div class="flex space-x-5 px-6 text-sm text-primary text-center">
+            <span @click="removeMovementDetail(row.index)" class="text-primary hover:cursor-pointer hover:underline">Eliminar</span>
+          </div>
+        </template>
+        <template #cell-description="{row}">
+          <span v-if="!row.original.description">-</span>
+        </template>
+      </BaseTableTanStack>
+    </DefaultCard>
   </div>
 
-  <div class="flex w-full justify-center my-3">
+  <div class="flex w-full justify-center my-10">
     <button
-      @click="addEntry"
-      class="flex w-full sm:w-1/3 lg:w-1/4 justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90"
+      @click="registerWarehouseEntryMovement"
+      class="flex w-full max-w-xs justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90"
     >
-      Registrar
+      Registrar entrada
     </button>
   </div>
 </template>

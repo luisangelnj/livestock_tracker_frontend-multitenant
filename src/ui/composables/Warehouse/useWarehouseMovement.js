@@ -23,7 +23,7 @@ const useWarehouseMovement = () => {
         createdAt: '',
         movementDetails: []
     })
-    const newMovementDetail = ref({
+    const newMovementDetailModel = ref({
         foodType: '',
         foodTypeId: '',
         quantity: '',
@@ -36,14 +36,27 @@ const useWarehouseMovement = () => {
     // VALIDACIONES
     const validateAddMovementDetail = () => {
         const newErrors = {};
-        if (!newMovementDetail.value.foodTypeId || !newMovementDetail.value.foodType) {
+        if (!newMovementDetailModel.value.foodTypeId || !newMovementDetailModel.value.foodType) {
             newErrors.foodType = 'Selecciona un alimento'
         }
-        if (!newMovementDetail.value.quantity) {
+        if (!newMovementDetailModel.value.quantity) {
             newErrors.quantity = 'Selecciona una cantidad'
         }
-        if (!newMovementDetail.value.unitPrice) {
+        if (!newMovementDetailModel.value.unitPrice) {
             newErrors.unitPrice = 'Selecciona el precio por unidad'
+        }
+        errors.value = newErrors; // Actualizar los errores
+
+        // Si no hay errores, retornar true para proceder con el registro
+        return Object.keys(newErrors).length === 0;
+    }
+
+    const validateRegisterEntryMovement = () => {
+        const newErrors = {};
+        if (!warehouseMovementModel.value.registerDate) newErrors.registerDate = 'La fecha de registro es requerida'
+
+        if (warehouseMovementModel.value.movementDetails.length < 1) {
+            newErrors.foodType = 'Agrega al menos un alimento a la tabla para registrar la entrada'
         }
         errors.value = newErrors; // Actualizar los errores
 
@@ -58,10 +71,10 @@ const useWarehouseMovement = () => {
             return; // Si hay errores, no procedemos
         }
     
-        warehouseMovementModel.value.movementDetails = [ ...warehouseMovementModel.value.movementDetails, newMovementDetail.value ]
+        warehouseMovementModel.value.movementDetails = [ ...warehouseMovementModel.value.movementDetails, newMovementDetailModel.value ]
     
         // Limpiar los campos después de agregar
-        newMovementDetail.value = {
+        newMovementDetailModel.value = {
             foodType: '',
             foodTypeId: '',
             quantity: '',
@@ -78,14 +91,48 @@ const useWarehouseMovement = () => {
     }
 
 
+    // FUNCIONES API
+    const registerWarehouseEntryMovement = async () => {
+        const loader = $loading.show();
+        try {
+            if (!validateRegisterEntryMovement()) {
+                toast.warning('Revisa los campos para continuar')
+                return;
+            }
+
+            const resp = await WarehouseMovement.registerWarehouseEntryMovement(warehouseMovementModel.value);
+            if (resp.success == false) throw resp;
+
+            toast.success('Se registró la entrada en almacén')
+            router.replace({ name: 'warehouse-stock' })
+            return;
+
+        } catch (error) {
+            if (error.code == 401) {
+                toast.warning('Tu sesión caducó por seguridad, ingresa nuevamente.')
+                window.location.reload();
+                return;
+            }
+            if (error.code == 422) {
+                toast.warning(error?.error ? error.error : 'Verifica la información ingresada')
+                return;
+            }
+            toast.error('Ha ocurrido un error al guardar el registro. Inténtalo de nuevo más tarde')
+            throw new Error('Error al registrar el movimiento de almacén: ' + error);
+        } finally {
+            loader.hide()
+        }
+    }
+
+
 
     return {
         warehouseMovementModel,
-        newMovementDetail,
+        newMovementDetailModel,
+        errors,
         addMovementDetail,
         removeMovementDetail,
-        errors,
-
+        registerWarehouseEntryMovement,
     }
 }
 
